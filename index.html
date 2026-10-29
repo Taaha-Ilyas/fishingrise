@@ -391,6 +391,21 @@ textarea#codebox{width:100%;height:120px;background:#06121f;color:#9fd3ff;border
 .mile{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.04);color:var(--muted)}
 .mile.got{color:#eaffef;background:rgba(95,224,122,.12)}.mile b{color:var(--gold)}
 .voyage{text-align:center;padding:10px}.voyage p{margin:10px 0}
+/* ---------------- Update 4+: drawn icons ---------------- */
+canvas.ico{display:inline-block;width:1.35em;height:1.35em;vertical-align:-.32em;pointer-events:none}
+.iconbtn canvas.ico{width:32px;height:32px;vertical-align:middle}
+.hbtn canvas.ico{width:30px;height:30px;display:block;margin:0 auto}
+.skicon canvas.ico{width:50px;height:50px;vertical-align:middle}
+.skcell.locked .skicon canvas.ico{width:34px;height:34px;opacity:.8}
+.pk-icon canvas.ico{width:38px;height:38px;vertical-align:middle}
+.autoicon canvas.ico{width:38px;height:38px;vertical-align:middle}
+.tt-name canvas.ico.big{width:30px;height:30px}
+.ptitle canvas.ico{width:30px;height:30px;vertical-align:-.38em}
+.btitle canvas.ico{width:1.1em;height:1.1em}
+.toast canvas.ico{width:1.45em;height:1.45em}
+.sktab canvas.ico{width:22px;height:22px}
+@media (max-width:640px){.skicon canvas.ico{width:38px;height:38px}}
+.pp-big.pend{background:linear-gradient(#2a3a5a,#141e30);border-color:#7ab8ff}.pp-big.pend b{color:#bfe0ff}
 
 </style>
 </head>
@@ -445,10 +460,19 @@ textarea#codebox{width:100%;height:120px;background:#06121f;color:#9fd3ff;border
 // ================================================================
 //  FISHING RISE — GAME DATA
 // ================================================================
-const GAME_VERSION = '1.3.0';
+const GAME_VERSION = '1.3.1';
 const UPDATE_NO = 4;
 
 const PATCH_NOTES = [
+  {
+    v: 'Update 4+ \u2014 v1.3.1', date: '29 October 2026', title: 'Hotfix: Looks & Legacies',
+    notes: [
+      'BUILDINGS now change with every upgrade, one step at a time: the starter buildings begin battered and broken, new ones start pale and plain, then each level adds paint, an extra wing, textured walls and finally a roof dormer with gold trim and lights.',
+      'PRESTIGE is now a true restart system. Milestones add Prestige to a pending pot during your voyage; defeat the Kraken and Prestige to restart the game and cash it in for permanent perks on your next run.',
+      'Older saves: perks bought under the old rules have been removed (and any skill points they gave). Your milestones still count towards your pending Prestige.',
+      'NEW ART: hand-drawn icons replace emoji across the game \u2014 skills, perks, automation, drones, gadgets, menus, building signs, the map and messages.'
+    ]
+  },
   {
     v: 'Update 4 \u2014 v1.3.0', date: '29 October 2026', title: 'Wild Isles & Clockwork',
     notes: [
@@ -1218,17 +1242,17 @@ const ISLE_BOSSES = ['moonray', 'bonefin', 'stormcaller', 'sovereign'];
 // ---------------- Automation (Bolt's Automation Dock) ----------------
 // Device levels 1-5 go from slow to really quick. Device level is capped by Bolt's level.
 const AUTO = [
-  { id: 'reeler', n: 'Auto-Reeler', icon: '🎣', bl: 1, base: 20000, mat: 'emberite',
+  { id: 'reeler', n: 'Auto-Reeler', icon: 'rod', bl: 1, base: 20000, mat: 'emberite',
     stat: L => `Hooks & lands the nearest fish every ${autoInt('reeler', L).toFixed(0)}s`, d: 'A clockwork arm that casts and reels by itself while you sail.' },
-  { id: 'net', n: 'Trawl Net', icon: '🕸️', bl: 1, base: 15000, mat: 'sunbronze',
+  { id: 'net', n: 'Trawl Net', icon: 'net', bl: 1, base: 15000, mat: 'sunbronze',
     stat: L => `Scoops up ${RARITIES[Math.min(4, L - 1)].n}${L > 1 ? ' or smaller' : ''} fish you sail over (${Math.round(netChance(L) * 100)}%/s)`, d: 'Drag a net behind the boat. Sail fast through schools of fish!' },
-  { id: 'buoy', n: 'Auto-Fisher Buoys', icon: '🛟', bl: 2, base: 30000, mat: 'emberite',
+  { id: 'buoy', n: 'Auto-Fisher Buoys', icon: 'buoy', bl: 2, base: 30000, mat: 'emberite',
     stat: L => `Drop ${L} buoy${L > 1 ? 's' : ''} (key 4). Each catches a fish every ${autoInt('buoy', L).toFixed(0)}s`, d: 'Leave them bobbing around the sea and sail back to collect their catch.' },
-  { id: 'beacon', n: 'Lure Beacon', icon: '🔆', bl: 2, base: 40000, mat: 'abyssium', set: 'gad_beacon',
+  { id: 'beacon', n: 'Lure Beacon', icon: 'lamp', bl: 2, base: 40000, mat: 'abyssium', set: 'gad_beacon',
     stat: L => `Pulls fish within ${beaconR(L)} towards you · calls a Lumen fish every ${autoInt('beacon', L).toFixed(0)}s`, d: 'A glowing lamp under the hull. Strange glowing fish swim in from the deep to see it.' },
-  { id: 'organ', n: 'Siren Organ', icon: '🎶', bl: 3, base: 60000, mat: 'abyssium', set: 'gad_organ',
+  { id: 'organ', n: 'Siren Organ', icon: 'organ', bl: 3, base: 60000, mat: 'abyssium', set: 'gad_organ',
     stat: L => `Every ${autoInt('organ', L).toFixed(0)}s, every fish swims to you · calls Songfins`, d: 'Plays a haunting song across the water. Some fish only come for the music.' },
-  { id: 'dredge', n: 'Deep Dredge', icon: '⚓', bl: 4, base: 80000, mat: 'abyssium', set: 'gad_dredge',
+  { id: 'dredge', n: 'Deep Dredge', icon: 'anchor', bl: 4, base: 80000, mat: 'abyssium', set: 'gad_dredge',
     stat: L => `Every ${autoInt('dredge', L).toFixed(0)}s: materials, treasure${L >= 2 ? ' & deep-sea fish' : ''}`, d: 'Drags the sea floor for anything worth having — including fish nobody has ever seen.' }
 ];
 const AUTO_BY_ID = {}; AUTO.forEach(a => AUTO_BY_ID[a.id] = a);
@@ -1247,10 +1271,10 @@ Object.keys(GAD_FISH).forEach(k => { const G = GAD_FISH[k]; addFishSet(k, { n: G
 
 // ---------------- Drones (Fizz's Workshop) ----------------
 const DRONE_UPG = [
-  { id: 'bay', n: 'Drone Bay', icon: '🛸', max: 4, fl: [3, 3, 4, 5], pl: [12, 15, 18, 21], cost: [8000, 30000, 90000, 250000], stat: L => `${L} scout drone${L > 1 ? 's' : ''}`, d: 'Each drone flies off to scout for treasure, talismans and wrecks.' },
-  { id: 'rotor', n: 'Rotors', icon: '🌀', max: 5, fl: [3, 3, 4, 4, 5], pl: [12, 14, 17, 20, 23], cost: [0, 6000, 20000, 60000, 160000], stat: L => `Drone speed ×${(1 + 0.3 * (L - 1)).toFixed(1)}`, d: 'Faster propellers so your drones cover more sea.' },
-  { id: 'scan', n: 'Scanner', icon: '📡', max: 5, fl: [3, 3, 4, 4, 5], pl: [12, 14, 17, 20, 23], cost: [0, 6000, 20000, 60000, 160000], stat: L => `Search ${droneRange(L)} around the boat, spots things within ${droneSpot(L)}`, d: 'Better optics to spot glinting water from higher up.' },
-  { id: 'claw', n: 'Cargo Claw', icon: '🦾', max: 3, fl: [3, 4, 5], pl: [14, 18, 22], cost: [20000, 80000, 250000], stat: L => ['Drones grab floating materials', 'Drones fetch Common–Rare treasures for you', 'Drones fetch any treasure for you'][L - 1], d: 'Lets drones carry things back to your boat.' }
+  { id: 'bay', n: 'Drone Bay', icon: 'drone', max: 4, fl: [3, 3, 4, 5], pl: [12, 15, 18, 21], cost: [8000, 30000, 90000, 250000], stat: L => `${L} scout drone${L > 1 ? 's' : ''}`, d: 'Each drone flies off to scout for treasure, talismans and wrecks.' },
+  { id: 'rotor', n: 'Rotors', icon: 'rotor', max: 5, fl: [3, 3, 4, 4, 5], pl: [12, 14, 17, 20, 23], cost: [0, 6000, 20000, 60000, 160000], stat: L => `Drone speed ×${(1 + 0.3 * (L - 1)).toFixed(1)}`, d: 'Faster propellers so your drones cover more sea.' },
+  { id: 'scan', n: 'Scanner', icon: 'radar', max: 5, fl: [3, 3, 4, 4, 5], pl: [12, 14, 17, 20, 23], cost: [0, 6000, 20000, 60000, 160000], stat: L => `Search ${droneRange(L)} around the boat, spots things within ${droneSpot(L)}`, d: 'Better optics to spot glinting water from higher up.' },
+  { id: 'claw', n: 'Cargo Claw', icon: 'claw', max: 3, fl: [3, 4, 5], pl: [14, 18, 22], cost: [20000, 80000, 250000], stat: L => ['Drones grab floating materials', 'Drones fetch Common–Rare treasures for you', 'Drones fetch any treasure for you'][L - 1], d: 'Lets drones carry things back to your boat.' }
 ];
 const DRONE_BY_ID = {}; DRONE_UPG.forEach(u => DRONE_BY_ID[u.id] = u);
 function droneLv(id) { return (S.drones && S.drones[id]) || 0; }
@@ -1261,51 +1285,51 @@ function droneSpot(L) { return 140 + 30 * (L - 1); }
 // ---------------- Skill tree (Witcher-style: 3 tabs × 4 columns × 3 rows) ----------------
 // Each tab's rows unlock as you spend points in that tab. Max ranks grow as you reach new regions.
 const SKILL_TABS = [
-  { id: 'Fishing', icon: '🎣', col: '#5ad1ff', cols: ['Finesse', 'Strength', 'Instinct', 'Bounty'] },
-  { id: 'Sailing', icon: '⛵', col: '#5fe07a', cols: ['Helm', 'Hull', 'Cargo', 'Engineer'] },
-  { id: 'Fortune', icon: '💰', col: '#ffd23a', cols: ['Trade', 'Seeker', 'Scholar', 'Legend'] }
+  { id: 'Fishing', icon: 'rod', col: '#5ad1ff', cols: ['Finesse', 'Strength', 'Instinct', 'Bounty'] },
+  { id: 'Sailing', icon: 'sail', col: '#5fe07a', cols: ['Helm', 'Hull', 'Cargo', 'Engineer'] },
+  { id: 'Fortune', icon: 'coins', col: '#ffd23a', cols: ['Trade', 'Seeker', 'Scholar', 'Legend'] }
 ];
 const SKILL_ROW_PTS = [0, 4, 10];
 const SKILLS4 = [
   // Fishing
-  ['steady', 'Fishing', 0, 0, 'Steady Hands', '🥅', 6, { box: 0.04 }, r => `+${4 * r}% catch box size`],
-  ['nimble', 'Fishing', 0, 1, 'Nimble Fingers', '💨', 6, { speed: 0.04 }, r => `+${4 * r}% box speed`],
-  ['resist', 'Fishing', 0, 2, 'Unshakeable', '🧊', 5, { resist: 0.08 }, r => `Mud, ink, fire and freeze last ${8 * r}% shorter`],
-  ['quick', 'Fishing', 1, 0, 'Quick Reel', '🌀', 6, { reel: 0.05 }, r => `+${5 * r}% reel speed`],
-  ['strong', 'Fishing', 1, 1, 'Strong Line', '🪢', 6, { grip: 0.05 }, r => `Catch meter drains ${5 * r}% slower`],
-  ['wind', 'Fishing', 1, 2, 'Second Wind', '🌬️', 3, { secondWind: 1, swPow: 0.08 }, r => `Once per fight an escaping fish is pulled back (+${27 + 8 * r}% meter)`],
-  ['read', 'Fishing', 2, 0, 'Read the Water', '👁️', 6, { warn: 0.08 }, r => `Fish abilities warn you ${8 * r}% earlier`],
-  ['iron', 'Fishing', 2, 1, 'Iron Nerves', '🛡️', 5, { inv: 0.4 }, r => `+${(0.4 * r).toFixed(1)}s invulnerability when a fight starts`],
-  ['focus', 'Fishing', 2, 2, 'Focus', '🧘', 3, { focus: 1 }, r => `Ability [2]: slow the fish to half speed for ${2 + r}s, once per fight`],
-  ['lucky', 'Fishing', 3, 0, 'Lucky Angler', '🍀', 5, { luck: 1 }, r => `+${r} luck (bigger, rarer fish)`],
-  ['twin', 'Fishing', 3, 1, 'Twin Catch', '🐟', 5, { dbl: 0.04 }, r => `${4 * r}% chance to land a second fish of the same kind`],
-  ['head', 'Fishing', 3, 2, 'Head Start', '⏱️', 5, { startProg: 0.03 }, r => `Fights start with +${3 * r}% catch meter`],
+  ['steady', 'Fishing', 0, 0, 'Steady Hands', 'net', 6, { box: 0.04 }, r => `+${4 * r}% catch box size`],
+  ['nimble', 'Fishing', 0, 1, 'Nimble Fingers', 'wind', 6, { speed: 0.04 }, r => `+${4 * r}% box speed`],
+  ['resist', 'Fishing', 0, 2, 'Unshakeable', 'ice', 5, { resist: 0.08 }, r => `Mud, ink, fire and freeze last ${8 * r}% shorter`],
+  ['quick', 'Fishing', 1, 0, 'Quick Reel', 'swirl', 6, { reel: 0.05 }, r => `+${5 * r}% reel speed`],
+  ['strong', 'Fishing', 1, 1, 'Strong Line', 'knot', 6, { grip: 0.05 }, r => `Catch meter drains ${5 * r}% slower`],
+  ['wind', 'Fishing', 1, 2, 'Second Wind', 'cloud', 3, { secondWind: 1, swPow: 0.08 }, r => `Once per fight an escaping fish is pulled back (+${27 + 8 * r}% meter)`],
+  ['read', 'Fishing', 2, 0, 'Read the Water', 'eye', 6, { warn: 0.08 }, r => `Fish abilities warn you ${8 * r}% earlier`],
+  ['iron', 'Fishing', 2, 1, 'Iron Nerves', 'shield', 5, { inv: 0.4 }, r => `+${(0.4 * r).toFixed(1)}s invulnerability when a fight starts`],
+  ['focus', 'Fishing', 2, 2, 'Focus', 'snail', 3, { focus: 1 }, r => `Ability [2]: slow the fish to half speed for ${2 + r}s, once per fight`],
+  ['lucky', 'Fishing', 3, 0, 'Lucky Angler', 'clover', 5, { luck: 1 }, r => `+${r} luck (bigger, rarer fish)`],
+  ['twin', 'Fishing', 3, 1, 'Twin Catch', 'twinfish', 5, { dbl: 0.04 }, r => `${4 * r}% chance to land a second fish of the same kind`],
+  ['head', 'Fishing', 3, 2, 'Head Start', 'stopwatch', 5, { startProg: 0.03 }, r => `Fights start with +${3 * r}% catch meter`],
   // Sailing
-  ['legs', 'Sailing', 0, 0, 'Sea Legs', '⛵', 6, { boat: 0.05 }, r => `+${5 * r}% boat speed`],
-  ['motor', 'Sailing', 0, 1, 'Motor Mechanic', '🚀', 5, { boostRe: 0.15 }, r => `Motor boost recharges ${15 * r}% faster`],
-  ['cast', 'Sailing', 0, 2, 'Long Cast', '🎯', 5, { cast: 0.08 }, r => `+${8 * r}% casting range`],
-  ['hull', 'Sailing', 1, 0, 'Shipwright’s Lore', '🛠️', 6, { hp: 0.1 }, r => `+${10 * r}% hull HP`],
-  ['calm', 'Sailing', 1, 1, 'Calm Waters', '🌊', 6, { haz: 0.08 }, r => `-${8 * r}% hazard damage`],
-  ['regen', 'Sailing', 1, 2, 'Field Repairs', '🔧', 4, { regen: 1 }, r => `Your hull slowly repairs itself at sea (${(0.25 * r).toFixed(2)}%/s)`],
-  ['deck', 'Sailing', 2, 0, 'Deckhand', '📦', 6, { hold: 0.08 }, r => `+${8 * r}% hold weight`],
-  ['scav', 'Sailing', 2, 1, 'Scavenger', '🪵', 6, { res: 0.12 }, r => `${12 * r}% chance of extra materials`],
-  ['salv', 'Sailing', 2, 2, 'Salvager', '⚓', 4, { salv: 0.2 }, r => `Salvage wrecks, oysters & ore ${20 * r}% faster`],
-  ['pilot', 'Sailing', 3, 0, 'Drone Pilot', '🛸', 5, { drone: 0.1 }, r => `Drones fly ${10 * r}% faster`],
-  ['oil', 'Sailing', 3, 1, 'Automaton Oil', '🤖', 5, { auto: 0.08 }, r => `Automation devices work ${8 * r}% faster`],
-  ['keen', 'Sailing', 3, 2, 'Keen Eyes', '🔭', 5, { spot: 0.15 }, r => `Spot glinting treasure ${15 * r}% further away`],
+  ['legs', 'Sailing', 0, 0, 'Sea Legs', 'sail', 6, { boat: 0.05 }, r => `+${5 * r}% boat speed`],
+  ['motor', 'Sailing', 0, 1, 'Motor Mechanic', 'rocket', 5, { boostRe: 0.15 }, r => `Motor boost recharges ${15 * r}% faster`],
+  ['cast', 'Sailing', 0, 2, 'Long Cast', 'bobber', 5, { cast: 0.08 }, r => `+${8 * r}% casting range`],
+  ['hull', 'Sailing', 1, 0, 'Shipwright’s Lore', 'hullfix', 6, { hp: 0.1 }, r => `+${10 * r}% hull HP`],
+  ['calm', 'Sailing', 1, 1, 'Calm Waters', 'wave', 6, { haz: 0.08 }, r => `-${8 * r}% hazard damage`],
+  ['regen', 'Sailing', 1, 2, 'Field Repairs', 'heartwrench', 4, { regen: 1 }, r => `Your hull slowly repairs itself at sea (${(0.25 * r).toFixed(2)}%/s)`],
+  ['deck', 'Sailing', 2, 0, 'Deckhand', 'crate', 6, { hold: 0.08 }, r => `+${8 * r}% hold weight`],
+  ['scav', 'Sailing', 2, 1, 'Scavenger', 'log', 6, { res: 0.12 }, r => `${12 * r}% chance of extra materials`],
+  ['salv', 'Sailing', 2, 2, 'Salvager', 'anchor', 4, { salv: 0.2 }, r => `Salvage wrecks, oysters & ore ${20 * r}% faster`],
+  ['pilot', 'Sailing', 3, 0, 'Drone Pilot', 'drone', 5, { drone: 0.1 }, r => `Drones fly ${10 * r}% faster`],
+  ['oil', 'Sailing', 3, 1, 'Automaton Oil', 'oilcan', 5, { auto: 0.08 }, r => `Automation devices work ${8 * r}% faster`],
+  ['keen', 'Sailing', 3, 2, 'Keen Eyes', 'spyglass', 5, { spot: 0.15 }, r => `Spot glinting treasure ${15 * r}% further away`],
   // Fortune
-  ['haggle', 'Fortune', 0, 0, 'Haggler', '🪙', 6, { sell: 0.04 }, r => `Fish sell for +${4 * r}%`],
-  ['appraise', 'Fortune', 0, 1, 'Appraiser', '💎', 6, { tsell: 0.06 }, r => `Treasures sell for +${6 * r}%`],
-  ['guild', 'Fortune', 0, 2, 'Guild Friend', '🤝', 5, { disc: 0.04 }, r => `Merchant upgrades & devices cost ${4 * r}% less`],
-  ['eye', 'Fortune', 1, 0, 'Treasure Eye', '✨', 6, { tre: 0.15, chest: 0.3 }, r => `+${15 * r}% treasure spots, more chests in fights`],
-  ['seeker', 'Fortune', 1, 1, 'Charm Seeker', '🧿', 6, { talis: 0.15 }, r => `Talismans appear ${15 * r}% more often`],
-  ['dowser', 'Fortune', 1, 2, 'Dowser', '⛏️', 5, { mat: 0.12 }, r => `${12 * r}% chance of extra rare materials`],
-  ['scholar', 'Fortune', 2, 0, 'Scholar of the Sea', '📘', 6, { xp: 0.05 }, r => `+${5 * r}% XP`],
-  ['collector', 'Fortune', 2, 1, 'Collector', '🐚', 5, { mus: 0.06 }, r => `Museum bonuses +${6 * r}% stronger`],
-  ['golden', 'Fortune', 2, 2, 'Golden Touch', '🌟', 5, { var: 0.15 }, r => `Rare variants (Golden, Spectral...) ${15 * r}% more common`],
-  ['hunter', 'Fortune', 3, 0, 'Boss Hunter', '☠️', 5, { bossGrip: 0.06 }, r => `Boss fights damage your line ${6 * r}% less`],
-  ['storm', 'Fortune', 3, 1, 'Storm Chaser', '🌀', 3, { isle: 1 }, r => `Special isles stay open ${r} minute${r > 1 ? 's' : ''} longer`],
-  ['fortune', 'Fortune', 3, 2, 'Fortune Favoured', '🎲', 3, { luck: 1, var: 0.05 }, r => `+${r} luck, +${5 * r}% rare variants`]
+  ['haggle', 'Fortune', 0, 0, 'Haggler', 'coins', 6, { sell: 0.04 }, r => `Fish sell for +${4 * r}%`],
+  ['appraise', 'Fortune', 0, 1, 'Appraiser', 'gem', 6, { tsell: 0.06 }, r => `Treasures sell for +${6 * r}%`],
+  ['guild', 'Fortune', 0, 2, 'Guild Friend', 'deal', 5, { disc: 0.04 }, r => `Merchant upgrades & devices cost ${4 * r}% less`],
+  ['eye', 'Fortune', 1, 0, 'Treasure Eye', 'chest', 6, { tre: 0.15, chest: 0.3 }, r => `+${15 * r}% treasure spots, more chests in fights`],
+  ['seeker', 'Fortune', 1, 1, 'Charm Seeker', 'talisman', 6, { talis: 0.15 }, r => `Talismans appear ${15 * r}% more often`],
+  ['dowser', 'Fortune', 1, 2, 'Dowser', 'pickaxe', 5, { mat: 0.12 }, r => `${12 * r}% chance of extra rare materials`],
+  ['scholar', 'Fortune', 2, 0, 'Scholar of the Sea', 'book', 6, { xp: 0.05 }, r => `+${5 * r}% XP`],
+  ['collector', 'Fortune', 2, 1, 'Collector', 'shell', 5, { mus: 0.06 }, r => `Museum bonuses +${6 * r}% stronger`],
+  ['golden', 'Fortune', 2, 2, 'Golden Touch', 'goldfish', 5, { var: 0.15 }, r => `Rare variants (Golden, Spectral...) ${15 * r}% more common`],
+  ['hunter', 'Fortune', 3, 0, 'Boss Hunter', 'skull', 5, { bossGrip: 0.06 }, r => `Boss fights damage your line ${6 * r}% less`],
+  ['storm', 'Fortune', 3, 1, 'Storm Chaser', 'storm', 3, { isle: 1 }, r => `Special isles stay open ${r} minute${r > 1 ? 's' : ''} longer`],
+  ['fortune', 'Fortune', 3, 2, 'Fortune Favoured', 'dice', 3, { luck: 1, var: 0.05 }, r => `+${r} luck, +${5 * r}% rare variants`]
 ].map(([id, cat, col, row, n, icon, max, fx, d]) => ({ id, cat, col, row, n, icon, max, fx, d }));
 // replace the old Update 3 list in place (keeps SKILL_BY_ID valid)
 SKILLS.length = 0; SKILLS4.forEach(s => SKILLS.push(s));
@@ -1317,34 +1341,35 @@ function tabPoints(cat) { return SKILLS.filter(s => s.cat === cat).reduce((a, s)
 function skillRowOpen(sk) { return tabPoints(sk.cat) >= SKILL_ROW_PTS[sk.row]; }
 
 // ---------------- Prestige ----------------
-// Prestige points (PP) come from milestones. Spend them on perks; each perk has many levels.
+// Prestige is a RESTART system (Update 4+): milestones earn Prestige during a voyage, but it only pays out
+// when you defeat the Kraken and start a New Voyage. Banked Prestige (S.prestige.pp) buys perks that last forever.
 const PERKS = [
-  ['p_sell', 'Golden Scales', '💰', 20, 2, 1, { sell: 0.04 }, r => `Fish sell for +${4 * r}%`],
-  ['p_xp', 'Wisdom of Ages', '📘', 20, 2, 1, { xp: 0.05 }, r => `+${5 * r}% XP`],
-  ['p_box', 'Wide Net', '🥅', 10, 3, 2, { box: 0.03 }, r => `+${3 * r}% catch box size`],
-  ['p_speed', 'Swift Hands', '💨', 10, 3, 2, { speed: 0.03 }, r => `+${3 * r}% box speed`],
-  ['p_reel', 'Spool Master', '🌀', 10, 3, 2, { reel: 0.03 }, r => `+${3 * r}% reel speed`],
-  ['p_grip', 'Iron Grip', '✊', 10, 3, 2, { grip: 0.03 }, r => `Catch meter drains ${3 * r}% slower`],
-  ['p_luck', 'Fortune’s Child', '🍀', 8, 4, 3, { luck: 0.5 }, r => `+${0.5 * r} luck`],
-  ['p_hold', 'Deep Pockets', '🎒', 10, 2, 2, { hold: 0.08 }, r => `+${8 * r}% hold weight`],
-  ['p_hull', 'Oak Heart', '🛡️', 10, 2, 1, { hp: 0.08 }, r => `+${8 * r}% hull HP`],
-  ['p_boat', 'Fair Winds', '⛵', 10, 2, 1, { boat: 0.04 }, r => `+${4 * r}% boat speed`],
-  ['p_tre', 'Treasure Sense', '💎', 10, 2, 2, { tre: 0.1, tsell: 0.04 }, r => `+${10 * r}% treasure spots, treasures +${4 * r}% value`],
-  ['p_talis', 'Charm Magnet', '🧿', 8, 3, 2, { talis: 0.1 }, r => `Talismans appear ${10 * r}% more often`],
-  ['p_res', 'Salvage Rights', '🪵', 10, 2, 1, { res: 0.1 }, r => `${10 * r}% chance of extra materials`],
-  ['p_mat', 'Prospector', '⛏️', 10, 3, 2, { mat: 0.1 }, r => `${10 * r}% chance of extra rare materials`],
-  ['p_smith', 'Master Smith', '⚒️', 5, 6, 4, { customQ: 0.1 }, r => `New custom parts are +${(0.1 * r).toFixed(1)} tiers stronger`],
-  ['p_auto', 'Machinist', '🤖', 10, 4, 2, { auto: 0.06 }, r => `Automation works ${6 * r}% faster`],
-  ['p_drone', 'Drone Swarm', '🛸', 3, 10, 8, { droneN: 1 }, r => `+${r} extra drone${r > 1 ? 's' : ''} (needs a Drone Bay)`],
-  ['p_sp', 'Skill Savant', '⭐', 10, 4, 3, {}, r => `+${r} skill point${r > 1 ? 's' : ''}`],
-  ['p_disc', 'Merchant Guild', '🤝', 10, 2, 2, { disc: 0.04 }, r => `Upgrades & devices cost ${4 * r}% less`],
-  ['p_mus', 'Curator’s Favour', '🐚', 10, 2, 2, { mus: 0.06 }, r => `Museum bonuses +${6 * r}% stronger`],
-  ['p_var', 'Shimmer', '🌟', 10, 2, 2, { var: 0.08 }, r => `Rare variants ${8 * r}% more common`],
-  ['p_isle', 'Isle Chronometer', '⏳', 5, 3, 3, { isle: 1 }, r => `Special isles stay open ${r} min longer`],
-  ['p_wild', 'Wanderlust', '🧭', 2, 8, 8, { wildN: 1 }, r => `+${r} wild isle${r > 1 ? 's' : ''} on the map at once`],
-  ['p_boss', 'Boss Bane', '☠️', 5, 5, 3, { bossGrip: 0.05 }, r => `Boss fights damage your line ${5 * r}% less`],
-  ['p_start', 'Quick Draw', '⚡', 5, 3, 2, { startProg: 0.03, inv: 0.2 }, r => `+${3 * r}% starting meter, +${(0.2 * r).toFixed(1)}s invulnerability`],
-  ['p_legacy', 'Legacy Wealth', '🏦', 5, 5, 5, {}, r => `New Voyages start with ${coinText(legacyCoins(r))}`]
+  ['p_sell', 'Golden Scales', 'coins', 20, 2, 1, { sell: 0.04 }, r => `Fish sell for +${4 * r}%`],
+  ['p_xp', 'Wisdom of Ages', 'book', 20, 2, 1, { xp: 0.05 }, r => `+${5 * r}% XP`],
+  ['p_box', 'Wide Net', 'net', 10, 3, 2, { box: 0.03 }, r => `+${3 * r}% catch box size`],
+  ['p_speed', 'Swift Hands', 'wind', 10, 3, 2, { speed: 0.03 }, r => `+${3 * r}% box speed`],
+  ['p_reel', 'Spool Master', 'swirl', 10, 3, 2, { reel: 0.03 }, r => `+${3 * r}% reel speed`],
+  ['p_grip', 'Iron Grip', 'fist', 10, 3, 2, { grip: 0.03 }, r => `Catch meter drains ${3 * r}% slower`],
+  ['p_luck', 'Fortune’s Child', 'clover', 8, 4, 3, { luck: 0.5 }, r => `+${0.5 * r} luck`],
+  ['p_hold', 'Deep Pockets', 'bag', 10, 2, 2, { hold: 0.08 }, r => `+${8 * r}% hold weight`],
+  ['p_hull', 'Oak Heart', 'shield', 10, 2, 1, { hp: 0.08 }, r => `+${8 * r}% hull HP`],
+  ['p_boat', 'Fair Winds', 'sail', 10, 2, 1, { boat: 0.04 }, r => `+${4 * r}% boat speed`],
+  ['p_tre', 'Treasure Sense', 'gem', 10, 2, 2, { tre: 0.1, tsell: 0.04 }, r => `+${10 * r}% treasure spots, treasures +${4 * r}% value`],
+  ['p_talis', 'Charm Magnet', 'talisman', 8, 3, 2, { talis: 0.1 }, r => `Talismans appear ${10 * r}% more often`],
+  ['p_res', 'Salvage Rights', 'log', 10, 2, 1, { res: 0.1 }, r => `${10 * r}% chance of extra materials`],
+  ['p_mat', 'Prospector', 'crystal', 10, 3, 2, { mat: 0.1 }, r => `${10 * r}% chance of extra rare materials`],
+  ['p_smith', 'Master Smith', 'anvil', 5, 6, 4, { customQ: 0.1 }, r => `New custom parts are +${(0.1 * r).toFixed(1)} tiers stronger`],
+  ['p_auto', 'Machinist', 'gear', 10, 4, 2, { auto: 0.06 }, r => `Automation works ${6 * r}% faster`],
+  ['p_drone', 'Drone Swarm', 'drone', 3, 10, 8, { droneN: 1 }, r => `+${r} extra drone${r > 1 ? 's' : ''} (needs a Drone Bay)`],
+  ['p_sp', 'Skill Savant', 'star', 10, 4, 3, {}, r => `+${r} skill point${r > 1 ? 's' : ''}`],
+  ['p_disc', 'Merchant Guild', 'deal', 10, 2, 2, { disc: 0.04 }, r => `Upgrades & devices cost ${4 * r}% less`],
+  ['p_mus', 'Curator’s Favour', 'shell', 10, 2, 2, { mus: 0.06 }, r => `Museum bonuses +${6 * r}% stronger`],
+  ['p_var', 'Shimmer', 'goldstar', 10, 2, 2, { var: 0.08 }, r => `Rare variants ${8 * r}% more common`],
+  ['p_isle', 'Isle Chronometer', 'hourglass', 5, 3, 3, { isle: 1 }, r => `Special isles stay open ${r} min longer`],
+  ['p_wild', 'Wanderlust', 'compass', 2, 8, 8, { wildN: 1 }, r => `+${r} wild isle${r > 1 ? 's' : ''} on the map at once`],
+  ['p_boss', 'Boss Bane', 'skull', 5, 5, 3, { bossGrip: 0.05 }, r => `Boss fights damage your line ${5 * r}% less`],
+  ['p_start', 'Quick Draw', 'bolt', 5, 3, 2, { startProg: 0.03, inv: 0.2 }, r => `+${3 * r}% starting meter, +${(0.2 * r).toFixed(1)}s invulnerability`],
+  ['p_legacy', 'Legacy Wealth', 'vault', 5, 5, 5, {}, r => `New Voyages start with ${coinText(legacyCoins(r))}`]
 ].map(([id, n, icon, max, base, inc, fx, d]) => ({ id, n, icon, max, base, inc, fx, d }));
 const PERK_BY_ID = {}; PERKS.forEach(p => PERK_BY_ID[p.id] = p);
 function perkLv(id) { return (S.prestige && S.prestige.perks[id]) || 0; }
@@ -1391,10 +1416,10 @@ function checkPrestige(silent) {
   for (const m of MILESTONES) {
     if (P.earned[m.id]) continue;
     let ok = false; try { ok = m.ok(); } catch (e) { ok = false; }
-    if (ok) { const pp = Math.round(m.pp * voyageMul()); P.earned[m.id] = pp; P.pp += pp; P.total += pp; got.push([m, pp]); }
+    if (ok) { const pp = Math.round(m.pp * voyageMul()); P.earned[m.id] = pp; P.pending = (P.pending || 0) + pp; got.push([m, pp]); }
   }
   if (got.length && !silent) {
-    got.slice(0, 3).forEach(([m, pp], i) => setTimeout(() => toast(`🏆 <b>+${pp} Prestige</b> · ${esc(m.n)}`, 'quest'), 400 + i * 700));
+    got.slice(0, 3).forEach(([m, pp], i) => setTimeout(() => toast(`🏆 <b>+${pp} Prestige</b> for your next voyage · ${esc(m.n)}`, 'quest'), 400 + i * 700));
     if (got.length > 3) setTimeout(() => toast(`🏆 …and ${got.length - 3} more milestones!`, 'quest'), 400 + 3 * 700);
     updateHUD && updateHUD();
   }
@@ -1714,7 +1739,7 @@ function newState(slot) {
     talismans: [], talEq: [], talNew: false, skills: {}, sp: 0, modules: {}, gadgets: {}, baitCasts: 0,
     bosses: {}, requests: [], track: -1, reqCount: 0,
     mats: {}, custom: [], wild: [], isles: {}, auto: {}, drones: {}, mapSeen: {},
-    prestige: { pp: 0, total: 0, earned: {}, perks: {}, voyage: 1 },
+    prestige: { pp: 0, pending: 0, total: 0, earned: {}, perks: {}, voyage: 1, v5: 1 },
     basket: [], dex: {}, quest: 0, qbase: 0, flags: {},
     stats: { caught: 0, sold: 0, earned: 0, escaped: 0, trips: 0, donated: 0, treasureSold: 0, treasures: 0, rescued: 0, resGot: {}, matGot: 0, wildVisits: 0, autoCaught: 0 },
     kraken: false, krakenTries: 0, nextId: 1
@@ -1754,7 +1779,19 @@ function migrate(s) {
     s.quest = t ? QUESTS.indexOf(t) : QUESTS.length; s.track = -1;
     s.v = 4; s.flags.u4intro = false;
   }
-  if (!s.prestige || !s.prestige.earned) s.prestige = { pp: 0, total: 0, earned: {}, perks: {}, voyage: 1 };
+  if (!s.prestige || !s.prestige.earned) s.prestige = { pp: 0, pending: 0, total: 0, earned: {}, perks: {}, voyage: 1, v5: 1 };
+  if (!s.prestige.v5) {
+    // Update 4+: Prestige became a restart system. Remove perks bought under the old rules.
+    const P = s.prestige, spPerk = P.perks.p_sp || 0;
+    let spent = 0; for (const id in P.perks) { const Pk = PERK_BY_ID[id]; if (Pk) for (let l = 0; l < P.perks[id]; l++) spent += perkCost(Pk, l); }
+    const hadPerks = Object.keys(P.perks).length > 0;
+    P.pending = Object.values(P.earned).reduce((a, b) => a + b, 0);
+    if ((P.voyage || 1) > 1) { P.pp = (P.pp || 0) + spent; } else { P.pp = 0; P.total = 0; }
+    P.perks = {}; P.v5 = 1;
+    if (spPerk) { s.sp -= spPerk; if (s.sp < 0) { s.skills = {}; s.sp = Math.max(0, (s.level || 1) - 1); } }
+    if (hadPerks || P.pending) s.flags.ppFix = 1;
+  }
+  if (s.prestige.pending == null) s.prestige.pending = 0;
   for (const k of ['mats', 'isles', 'auto', 'drones', 'mapSeen']) if (!s[k] || typeof s[k] !== 'object') s[k] = {};
   for (const k of ['custom', 'wild']) if (!Array.isArray(s[k])) s[k] = [];
   Object.values(s.dex).forEach(d => { if (!Array.isArray(d.don)) d.don = [0, 0, 0, 0, 0, 0, 0]; if (!d.vars) d.vars = [1, 0, 0, 0, 0, 0]; while (d.rar.length < 7) d.rar.push(0); });
@@ -1903,8 +1940,9 @@ function keyVec() {
 //  DRAWING: fish, rods, boats, people
 // ================================================================
 function shade(hex, amt) {
-  let c = hex.replace('#', ''); if (c.length === 3) c = c.split('').map(x => x + x).join('');
-  const n = parseInt(c, 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  let r, g, b;
+  if (hex.startsWith('rgb')) { [r, g, b] = hex.match(/[\d.]+/g).map(Number); }
+  else { let c = hex.replace('#', ''); if (c.length === 3) c = c.split('').map(x => x + x).join(''); const n = parseInt(c, 16); r = n >> 16; g = (n >> 8) & 255; b = n & 255; }
   if (amt >= 0) { r += (255 - r) * amt; g += (255 - g) * amt; b += (255 - b) * amt; }
   else { r *= 1 + amt; g *= 1 + amt; b *= 1 + amt; }
   return `rgb(${r | 0},${g | 0},${b | 0})`;
@@ -2593,6 +2631,193 @@ function drawMatIcon(c, id, x, y, s, t = 0) {
 }
 
 // ================================================================
+//  ICON ART (Update 4+): hand-drawn canvas icons in the game's style.
+//  Every icon is drawn in a 100x100 box: soft gradient fills, a dark ink
+//  outline and a little highlight — the same look as the village & fish art.
+// ================================================================
+const ICO_INK = '#1a2633';
+const ICONS = {};
+(function () {
+  let c;
+  const G = (y0, y1, a, b) => { const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+  const R = (x0, y0, x1, y1, a, b) => { const g = c.createRadialGradient(x0, y0, 1, x1, y1, Math.abs(y1 - y0) + 40); g.addColorStop(0, a); g.addColorStop(1, b); return g; };
+  const fs = (fill, lw = 5) => { c.fillStyle = fill; c.fill(); if (lw) { c.strokeStyle = ICO_INK; c.lineWidth = lw; c.stroke(); } };
+  const st = (col, lw) => { c.strokeStyle = col; c.lineWidth = lw; c.stroke(); };
+  const poly = pts => { c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); };
+  const circ = (x, y, r) => { c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); };
+  const ell = (x, y, rx, ry, a = 0) => { c.beginPath(); c.ellipse(x, y, rx, ry, a, 0, Math.PI * 2); };
+  const rr = (x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
+  const line = (pts, col, lw) => { c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); st(col, lw); };
+  const shine = (x, y, rx, ry, a = -0.5) => { c.fillStyle = 'rgba(255,255,255,.45)'; ell(x, y, rx, ry, a); c.fill(); };
+  const star = (x, y, r1, r2, n = 5, rot = -Math.PI / 2) => { c.beginPath(); for (let i = 0; i < n * 2; i++) { const a = rot + i * Math.PI / n, r = i % 2 ? r2 : r1; c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } c.closePath(); };
+  const D = (name, fn) => { ICONS[name] = fn; };
+  const set = cc => { c = cc; };
+  ICONS._set = set;
+
+  // ---- sea & fishing ----
+  const fishBody = (a, b) => { c.beginPath(); c.moveTo(14, 50); c.quadraticCurveTo(40, 18, 70, 42); c.lineTo(90, 26); c.lineTo(86, 50); c.lineTo(90, 74); c.lineTo(70, 58); c.quadraticCurveTo(40, 82, 14, 50); c.closePath(); fs(G(25, 75, a, b));
+    c.beginPath(); c.moveTo(38, 36); c.quadraticCurveTo(46, 22, 58, 34); st(ICO_INK, 4); circ(28, 46, 5); fs('#fff', 3); circ(29, 46, 2.2); c.fillStyle = ICO_INK; c.fill(); shine(44, 40, 12, 4, -0.3); };
+  D('fish', () => fishBody('#7ad8ff', '#2a7ab8'));
+  D('goldfish', () => { fishBody('#fff3a0', '#e8a91b'); star(78, 20, 10, 4); fs('#fff6b0', 3); });
+  D('twinfish', () => { c.save(); c.translate(-6, -14); c.scale(0.78, 0.78); ICONS.fish(); c.restore(); c.save(); c.translate(26, 34); c.scale(0.7, 0.7); ICONS.fish(); c.restore(); });
+  D('rod', () => { c.beginPath(); c.moveTo(18, 88); c.quadraticCurveTo(40, 30, 84, 14); st(ICO_INK, 10); c.beginPath(); c.moveTo(18, 88); c.quadraticCurveTo(40, 30, 84, 14); st('#c9a26b', 5);
+    line([[84, 14], [84, 62]], 'rgba(255,255,255,.9)', 2); circ(84, 66, 7); fs('#ff4a3a', 3); c.fillStyle = '#fff'; c.fillRect(77, 60, 14, 4); circ(30, 70, 11); fs(G(58, 82, '#e8eef4', '#7a8794'), 4); line([[30, 70], [40, 62]], ICO_INK, 4); });
+  D('net', () => { circ(42, 42, 30); st(ICO_INK, 9); circ(42, 42, 30); st('#c88a3a', 5); c.save(); circ(42, 42, 27); c.clip(); c.fillStyle = 'rgba(160,220,255,.25)'; c.fillRect(0, 0, 100, 100);
+    for (let i = -2; i <= 2; i++) { line([[12, 42 + i * 11 - 20], [72, 42 + i * 11 + 20]], 'rgba(240,230,200,.9)', 2.5); line([[12, 42 + i * 11 + 20], [72, 42 + i * 11 - 20]], 'rgba(240,230,200,.9)', 2.5); } c.restore();
+    line([[64, 64], [90, 90]], ICO_INK, 11); line([[64, 64], [90, 90]], '#8a5a30', 6); });
+  D('buoy', () => { circ(50, 50, 36); fs('#fff'); circ(50, 50, 16); c.fillStyle = 'rgba(0,0,0,0)'; c.fill();
+    for (let i = 0; i < 4; i++) { c.beginPath(); c.arc(50, 50, 36, i * Math.PI / 2 + 0.35, i * Math.PI / 2 + 1.22); c.arc(50, 50, 16, i * Math.PI / 2 + 1.22, i * Math.PI / 2 + 0.35, true); c.closePath(); fs('#e8463a', 0); }
+    circ(50, 50, 36); st(ICO_INK, 5); circ(50, 50, 16); fs('#5ab3cf', 5); shine(36, 30, 10, 5); });
+  D('anchor', () => { circ(50, 20, 9); st(ICO_INK, 9); circ(50, 20, 9); st('#a8b4c0', 5); line([[50, 30], [50, 84]], ICO_INK, 12); line([[50, 30], [50, 84]], '#a8b4c0', 7); line([[32, 42], [68, 42]], ICO_INK, 11); line([[32, 42], [68, 42]], '#a8b4c0', 6);
+    c.beginPath(); c.moveTo(16, 62); c.quadraticCurveTo(22, 88, 50, 88); c.quadraticCurveTo(78, 88, 84, 62); st(ICO_INK, 12); c.beginPath(); c.moveTo(16, 62); c.quadraticCurveTo(22, 88, 50, 88); c.quadraticCurveTo(78, 88, 84, 62); st('#a8b4c0', 7);
+    poly([[10, 64], [24, 56], [22, 70]]); fs('#a8b4c0', 4); poly([[90, 64], [76, 56], [78, 70]]); fs('#a8b4c0', 4); });
+  D('shell', () => { c.beginPath(); c.moveTo(50, 84); c.lineTo(20, 46); c.quadraticCurveTo(50, -2, 80, 46); c.closePath(); fs(G(14, 84, '#ffd8c8', '#ff8a9a'));
+    for (let i = -2; i <= 2; i++) line([[50, 82], [50 + i * 13, 22 + Math.abs(i) * 8]], 'rgba(160,60,80,.6)', 3); rr(40, 80, 20, 10, 4); fs('#ffb0a8', 4); shine(40, 30, 9, 5); });
+  D('oyster', () => { ell(50, 66, 38, 18); fs(G(48, 84, '#b8aa98', '#6a5e50')); c.beginPath(); c.moveTo(12, 62); c.quadraticCurveTo(50, 4, 88, 62); c.quadraticCurveTo(50, 44, 12, 62); fs(G(20, 62, '#d8ccba', '#8a7e70')); circ(50, 60, 10); fs(R(46, 56, 50, 60, '#fff', '#d8e0f0'), 4); });
+  D('wave', () => { c.beginPath(); c.moveTo(8, 70); c.quadraticCurveTo(22, 30, 50, 34); c.quadraticCurveTo(72, 36, 72, 52); c.quadraticCurveTo(58, 44, 54, 58); c.quadraticCurveTo(66, 74, 92, 64); c.lineTo(92, 90); c.lineTo(8, 90); c.closePath(); fs(G(30, 90, '#7ad8ff', '#1f6a9a')); line([[20, 60], [34, 48]], 'rgba(255,255,255,.7)', 4); });
+  D('splash', () => { [[34, 40, 13], [64, 54, 11], [44, 74, 9]].forEach(([x, y, r]) => { c.beginPath(); c.moveTo(x, y - r * 2); c.quadraticCurveTo(x + r, y - r * 0.2, x, y + r); c.quadraticCurveTo(x - r, y - r * 0.2, x, y - r * 2); fs(G(y - r * 2, y + r, '#bff0ff', '#3a9ad8'), 4); shine(x - r * 0.3, y - r * 0.3, r * 0.25, r * 0.4, 0); }); });
+  D('worm', () => { c.beginPath(); c.moveTo(16, 70); c.bezierCurveTo(26, 30, 46, 90, 58, 50); c.bezierCurveTo(66, 26, 82, 34, 86, 22); st(ICO_INK, 16); c.beginPath(); c.moveTo(16, 70); c.bezierCurveTo(26, 30, 46, 90, 58, 50); c.bezierCurveTo(66, 26, 82, 34, 86, 22); st('#ff9ab0', 10);
+    circ(86, 22, 3); c.fillStyle = ICO_INK; c.fill(); [[30, 52], [48, 66], [64, 40]].forEach(([x, y]) => line([[x - 3, y - 3], [x + 3, y + 3]], 'rgba(160,50,80,.6)', 2)); });
+  D('octopus', () => { for (let i = 0; i < 5; i++) { const x = 22 + i * 14; c.beginPath(); c.moveTo(x, 54); c.quadraticCurveTo(x + (i - 2) * 6, 78, x + (i - 2) * 10, 90); st(ICO_INK, 11); c.beginPath(); c.moveTo(x, 54); c.quadraticCurveTo(x + (i - 2) * 6, 78, x + (i - 2) * 10, 90); st('#b05ad0', 6); }
+    ell(50, 40, 30, 28); fs(G(12, 66, '#d88aff', '#7a2aa0')); circ(40, 42, 6); fs('#ffd23a', 3); circ(60, 42, 6); fs('#ffd23a', 3); c.fillStyle = ICO_INK; c.fillRect(38, 40, 4, 4); c.fillRect(58, 40, 4, 4); shine(38, 22, 10, 5); });
+  D('island', () => { ell(50, 80, 44, 12); fs(G(70, 92, '#7ad8ff', '#2a7ab8'), 4); c.beginPath(); c.moveTo(16, 80); c.quadraticCurveTo(50, 52, 84, 80); fs('#f0dea0'); c.beginPath(); c.moveTo(50, 74); c.quadraticCurveTo(46, 44, 56, 22); st(ICO_INK, 9); c.beginPath(); c.moveTo(50, 74); c.quadraticCurveTo(46, 44, 56, 22); st('#8a6a3a', 5);
+    for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + (i - 2) * 0.62; c.save(); c.translate(56, 22); c.rotate(a); c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(14, -8, 30, 4); c.quadraticCurveTo(14, 2, 0, 0); fs('#3f9a3a', 3); c.restore(); } });
+  D('boat', () => { c.beginPath(); c.moveTo(10, 58); c.lineTo(90, 58); c.quadraticCurveTo(82, 84, 62, 84); c.lineTo(32, 84); c.quadraticCurveTo(16, 82, 10, 58); fs(G(58, 84, '#c88a4a', '#7a4a22')); line([[16, 66], [86, 66]], 'rgba(0,0,0,.25)', 3); line([[50, 58], [50, 12]], ICO_INK, 7); line([[50, 58], [50, 12]], '#8a5a30', 3); });
+  D('sail', () => { ICONS.boat(); poly([[52, 14], [52, 54], [84, 54]]); fs(G(14, 54, '#ffffff', '#d8dce4'), 4); poly([[48, 20], [48, 54], [22, 54]]); fs(G(20, 54, '#f4f0e6', '#c8c0b0'), 4); c.fillStyle = '#e8463a'; poly([[50, 6], [50, 14], [62, 10]]); c.fill(); });
+  D('compass', () => { circ(50, 50, 38); fs(G(12, 88, '#f4e0b0', '#b8864a')); circ(50, 50, 28); fs('#fff8e8', 4); poly([[50, 22], [58, 50], [50, 78], [42, 50]]); c.fillStyle = '#e8463a'; poly([[50, 22], [58, 50], [42, 50]]); c.fill(); c.strokeStyle = ICO_INK; c.lineWidth = 3; poly([[50, 22], [58, 50], [50, 78], [42, 50]]); c.stroke(); circ(50, 50, 4); fs(ICO_INK, 0); });
+  D('spyglass', () => { c.save(); c.translate(50, 50); c.rotate(-0.6); rr(-40, -9, 30, 18, 4); fs(G(-9, 9, '#ffd864', '#b8861b')); rr(-12, -12, 30, 24, 5); fs(G(-12, 12, '#7a5a3a', '#4a3020')); rr(16, -15, 26, 30, 6); fs(G(-15, 15, '#ffd864', '#b8861b')); ell(42, 0, 4, 13); fs('#9fe6ff', 3); c.restore(); });
+  D('map', () => { poly([[10, 22], [36, 14], [64, 24], [90, 16], [90, 80], [64, 88], [36, 78], [10, 86]]); fs(G(14, 88, '#f4e8c8', '#d8c090')); line([[36, 14], [36, 78]], 'rgba(0,0,0,.2)', 3); line([[64, 24], [64, 88]], 'rgba(0,0,0,.2)', 3);
+    c.setLineDash([5, 5]); line([[20, 70], [40, 50], [58, 60], [76, 36]], '#c84a3a', 4); c.setLineDash([]); line([[70, 30], [82, 42]], '#c84a3a', 5); line([[82, 30], [70, 42]], '#c84a3a', 5); });
+  D('cloud', () => { c.beginPath(); c.arc(32, 60, 18, Math.PI * 0.5, Math.PI * 1.5); c.arc(48, 40, 22, Math.PI, Math.PI * 1.9); c.arc(70, 50, 18, Math.PI * 1.3, Math.PI * 0.5); c.closePath(); fs(G(18, 78, '#ffffff', '#c8d4e2')); shine(42, 34, 10, 5); });
+  D('storm', () => { ICONS.cloud(); poly([[52, 60], [40, 80], [50, 80], [44, 96], [62, 74], [52, 74], [58, 60]]); fs('#ffe24a', 4); });
+  D('bolt', () => { poly([[58, 6], [24, 56], [46, 56], [36, 94], [76, 40], [54, 40], [66, 6]]); fs(G(6, 94, '#fff3a0', '#ffb020')); shine(52, 20, 4, 8, 0.3); });
+  D('ice', () => { poly([[20, 36], [50, 20], [80, 36], [80, 70], [50, 86], [20, 70]]); fs(G(20, 86, '#e8fbff', '#7ac8e8')); line([[20, 36], [50, 52], [80, 36]], 'rgba(255,255,255,.8)', 3); line([[50, 52], [50, 86]], 'rgba(255,255,255,.6)', 3); shine(36, 36, 8, 4, -0.4); });
+  D('wind', () => { [[20, 34, 70, 22], [12, 52, 82, 40], [24, 70, 64, 60]].forEach(([x, y, x2, cy]) => { c.beginPath(); c.moveTo(x, y); c.lineTo(x2 - 10, y); c.quadraticCurveTo(x2 + 8, y, x2 + 4, cy + 2); c.quadraticCurveTo(x2, cy - 8, x2 - 8, cy - 2); st(ICO_INK, 10); c.beginPath(); c.moveTo(x, y); c.lineTo(x2 - 10, y); c.quadraticCurveTo(x2 + 8, y, x2 + 4, cy + 2); c.quadraticCurveTo(x2, cy - 8, x2 - 8, cy - 2); st('#bfe8ff', 5); }); });
+  D('swirl', () => { c.beginPath(); for (let a = 0; a < Math.PI * 4.2; a += 0.15) { const r = 4 + a * 3, x = 50 + Math.cos(a) * r, y = 50 + Math.sin(a) * r; a ? c.lineTo(x, y) : c.moveTo(x, y); } st(ICO_INK, 13); c.beginPath(); for (let a = 0; a < Math.PI * 4.2; a += 0.15) { const r = 4 + a * 3, x = 50 + Math.cos(a) * r, y = 50 + Math.sin(a) * r; a ? c.lineTo(x, y) : c.moveTo(x, y); } const g = c.createLinearGradient(10, 10, 90, 90); g.addColorStop(0, '#7affea'); g.addColorStop(1, '#a87aff'); st(g, 7); });
+  D('sparkle', () => { star(44, 54, 36, 9, 4, 0); fs(G(18, 90, '#fff8c8', '#ffc23a')); star(78, 22, 14, 4, 4, 0); fs('#fff8c8', 4); shine(38, 44, 4, 8, 0); });
+  D('star', () => { star(50, 54, 40, 18); fs(G(14, 90, '#fff3a0', '#ffb020')); shine(40, 40, 8, 5); });
+  D('goldstar', () => { star(50, 54, 40, 18); fs(R(42, 40, 50, 54, '#ffffff', '#ffcf3a')); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + 0.4; line([[50 + Math.cos(a) * 44, 54 + Math.sin(a) * 44], [50 + Math.cos(a) * 50, 54 + Math.sin(a) * 50]], '#ffe08a', 4); } });
+  D('swirlstar', () => ICONS.goldstar());
+
+  // ---- treasure & money ----
+  D('chest', () => { rr(12, 44, 76, 44, 6); fs(G(44, 88, '#b8864a', '#6a4a26')); c.beginPath(); c.moveTo(12, 46); c.quadraticCurveTo(12, 16, 50, 16); c.quadraticCurveTo(88, 16, 88, 46); c.closePath(); fs(G(16, 46, '#c8965a', '#8a5a30'));
+    c.fillStyle = '#ffcf3a'; c.fillRect(22, 18, 8, 70); c.fillRect(70, 18, 8, 70); c.strokeStyle = ICO_INK; c.lineWidth = 3; c.strokeRect(22, 18, 8, 70); c.strokeRect(70, 18, 8, 70); rr(42, 40, 16, 18, 3); fs('#ffcf3a', 4); circ(50, 49, 3); c.fillStyle = ICO_INK; c.fill(); });
+  D('coins', () => { [[30, 72], [70, 72], [50, 56], [50, 38]].forEach(([x, y], i) => { ell(x, y + 6, 24, 9); fs('#b8861b', 4); ell(x, y, 24, 9); fs(G(y - 9, y + 9, '#fff3a0', '#ffc020'), 4); ell(x, y, 13, 4); st('rgba(150,100,0,.6)', 2.5); }); });
+  D('gem', () => { poly([[24, 34], [36, 18], [64, 18], [76, 34], [50, 86]]); fs(G(18, 86, '#bff8ff', '#3ab8e8')); line([[24, 34], [76, 34]], 'rgba(255,255,255,.8)', 3); line([[36, 18], [44, 34], [50, 86]], 'rgba(255,255,255,.55)', 2.5); line([[64, 18], [56, 34], [50, 86]], 'rgba(0,60,100,.35)', 2.5); shine(40, 26, 5, 3, 0); });
+  D('crystal', () => { [[36, 70, 14, 46, '#c8a8ff'], [64, 72, 12, 38, '#a87aff'], [50, 74, 16, 60, '#e0d0ff']].forEach(([x, y, w, h, col]) => { poly([[x - w / 2, y], [x - w / 2, y - h * 0.75], [x, y - h], [x + w / 2, y - h * 0.75], [x + w / 2, y]]); fs(G(y - h, y, '#ffffff', col), 4); }); ell(50, 78, 34, 8); fs('#6a6070', 4); });
+  D('trophy', () => { c.beginPath(); c.moveTo(26, 14); c.lineTo(74, 14); c.quadraticCurveTo(74, 60, 50, 62); c.quadraticCurveTo(26, 60, 26, 14); fs(G(14, 62, '#fff3a0', '#e8a91b'));
+    c.beginPath(); c.arc(26, 30, 12, Math.PI * 0.5, Math.PI * 1.5); st(ICO_INK, 9); c.beginPath(); c.arc(26, 30, 12, Math.PI * 0.5, Math.PI * 1.5); st('#ffcf3a', 4); c.beginPath(); c.arc(74, 30, 12, -Math.PI * 0.5, Math.PI * 0.5); st(ICO_INK, 9); c.beginPath(); c.arc(74, 30, 12, -Math.PI * 0.5, Math.PI * 0.5); st('#ffcf3a', 4);
+    rr(44, 60, 12, 14, 2); fs('#e8a91b', 4); rr(28, 74, 44, 14, 4); fs(G(74, 88, '#8a5a30', '#5a3a1a')); star(50, 34, 10, 4); fs('#fff8d0', 0); shine(36, 24, 4, 8, 0.2); });
+  D('medal', () => { poly([[30, 8], [46, 8], [56, 44], [40, 44]]); fs('#3a86c8', 4); poly([[70, 8], [54, 8], [44, 44], [60, 44]]); fs('#e8463a', 4); circ(50, 64, 26); fs(G(38, 90, '#fff3a0', '#e8a91b')); star(50, 64, 14, 6); fs('#fff8d0', 3); });
+  D('vault', () => { rr(12, 16, 76, 72, 10); fs(G(16, 88, '#9aa4ad', '#4a525a')); circ(50, 52, 22); fs(G(30, 74, '#e8eef4', '#8a949e')); for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; line([[50, 52], [50 + Math.cos(a) * 18, 52 + Math.sin(a) * 18]], ICO_INK, 3); } circ(50, 52, 6); fs('#ffcf3a', 3); rr(20, 86, 12, 6, 2); fs('#3a3a3a', 0); rr(68, 86, 12, 6, 2); fs('#3a3a3a', 0); });
+  D('tag', () => { poly([[14, 40], [40, 14], [88, 14], [88, 62], [62, 88]]); fs(G(14, 88, '#ffe08a', '#e8a91b')); circ(70, 32, 7); fs('#fff', 4); });
+
+  // ---- tools & crafting ----
+  D('anvil', () => { poly([[14, 34], [80, 34], [88, 42], [66, 50], [62, 62], [72, 74], [72, 86], [28, 86], [28, 74], [40, 62], [36, 50], [14, 44]]); fs(G(34, 86, '#8a949e', '#3a424a')); shine(40, 38, 16, 3, 0);
+    c.save(); c.translate(64, 22); c.rotate(-0.6); rr(-4, -2, 8, 34, 3); fs('#8a5a30', 4); rr(-16, -14, 32, 14, 3); fs(G(-14, 0, '#c8ced6', '#6a727a'), 4); c.restore(); });
+  D('hammer', () => { c.save(); c.translate(50, 50); c.rotate(-0.7); rr(-5, -8, 10, 52, 4); fs(G(-8, 44, '#b8864a', '#6a4a26')); rr(-26, -30, 52, 22, 5); fs(G(-30, -8, '#c8ced6', '#5a626a')); c.restore(); });
+  D('wrench', () => { c.save(); c.translate(50, 50); c.rotate(-0.78); rr(-7, -14, 14, 58, 6); fs(G(-14, 44, '#d8dee4', '#7a848e'));
+    c.beginPath(); c.moveTo(-7, -14); c.lineTo(-18, -24); c.lineTo(-16, -44); c.lineTo(-6, -44); c.lineTo(-6, -30); c.lineTo(6, -30); c.lineTo(6, -44); c.lineTo(16, -44); c.lineTo(18, -24); c.lineTo(7, -14); c.closePath(); fs(G(-44, -14, '#e8eef4', '#8a949e')); circ(0, 34, 4); fs(ICO_INK, 0); c.restore(); });
+  D('gear', () => { c.beginPath(); for (let i = 0; i < 20; i++) { const a = i / 20 * Math.PI * 2, r = i % 2 ? 30 : 40; c.lineTo(50 + Math.cos(a) * r, 50 + Math.sin(a) * r); } c.closePath(); fs(G(10, 90, '#ffc86a', '#c8702a')); circ(50, 50, 12); fs('#3a2a1a', 4); shine(38, 32, 8, 4); });
+  D('pickaxe', () => { c.save(); c.translate(50, 50); c.rotate(0.75); rr(-5, -20, 10, 62, 4); fs(G(-20, 42, '#b8864a', '#6a4a26')); c.restore(); c.beginPath(); c.moveTo(12, 40); c.quadraticCurveTo(40, 8, 84, 20); c.quadraticCurveTo(60, 22, 50, 32); c.quadraticCurveTo(40, 28, 12, 40); fs(G(8, 40, '#d8dee4', '#7a848e')); });
+  D('claw', () => { rr(36, 8, 28, 22, 5); fs(G(8, 30, '#ffc86a', '#c8702a')); line([[50, 30], [50, 46]], ICO_INK, 8); [[-1], [1]].forEach(([s]) => { c.beginPath(); c.moveTo(50, 46); c.quadraticCurveTo(50 + s * 30, 52, 50 + s * 18, 84); st(ICO_INK, 11); c.beginPath(); c.moveTo(50, 46); c.quadraticCurveTo(50 + s * 30, 52, 50 + s * 18, 84); st('#a8b4c0', 6); }); circ(50, 46, 7); fs('#5a626a', 4); });
+  D('oilcan', () => { rr(18, 44, 46, 42, 8); fs(G(44, 86, '#ff7a5a', '#b83a2a')); poly([[56, 50], [90, 22], [94, 28], [64, 58]]); fs('#c8ced6', 4); rr(30, 32, 22, 14, 4); fs('#c8ced6', 4); c.beginPath(); c.moveTo(92, 34); c.quadraticCurveTo(98, 44, 92, 50); c.quadraticCurveTo(86, 44, 92, 34); fs('#3a2a1a', 3); shine(30, 56, 6, 10, 0); });
+  D('radar', () => { line([[50, 62], [50, 88]], ICO_INK, 9); line([[50, 62], [50, 88]], '#8a949e', 4); rr(32, 84, 36, 8, 3); fs('#5a626a', 4); c.beginPath(); c.ellipse(46, 40, 34, 22, -0.6, 0, Math.PI); c.closePath(); fs(G(14, 66, '#e8eef4', '#8a949e'));
+    line([[46, 40], [66, 22]], ICO_INK, 4); circ(68, 20, 5); fs('#5affd0', 3); [10, 18].forEach(r => { c.beginPath(); c.arc(68, 20, r, -1.4, 0.2); st('rgba(90,255,208,.9)', 3); }); });
+  D('drone', () => { line([[22, 22], [78, 78]], ICO_INK, 9); line([[78, 22], [22, 78]], ICO_INK, 9); line([[22, 22], [78, 78]], '#5a626a', 4); line([[78, 22], [22, 78]], '#5a626a', 4);
+    [[22, 22], [78, 22], [22, 78], [78, 78]].forEach(([x, y]) => { ell(x, y, 17, 6); fs('rgba(200,225,245,.75)', 3); circ(x, y, 4); fs(ICO_INK, 0); });
+    rr(36, 38, 28, 24, 8); fs(G(38, 62, '#ffc86a', '#e8902a')); circ(50, 56, 3.5); fs('#5affd0', 0); });
+  D('rotor', () => { for (let i = 0; i < 3; i++) { c.save(); c.translate(50, 50); c.rotate(i * Math.PI * 2 / 3 - 0.3); c.beginPath(); c.ellipse(0, -22, 10, 22, 0.25, 0, Math.PI * 2); fs(G(-44, 0, '#e8eef4', '#8a949e')); c.restore(); } circ(50, 50, 9); fs('#ffc86a', 4); });
+  D('robot', () => { line([[50, 20], [50, 8]], ICO_INK, 5); circ(50, 8, 6); fs('#ff5a5a', 3); rr(16, 20, 68, 56, 12); fs(G(20, 76, '#ffd86a', '#b8862a')); rr(26, 34, 48, 22, 8); fs('#22262e', 4);
+    circ(40, 45, 6); fs('#5affd0', 0); circ(60, 45, 6); fs('#5affd0', 0); rr(36, 62, 28, 6, 3); fs('#5a4a2a', 0); circ(22, 26, 2.5); fs(ICO_INK, 0); circ(78, 26, 2.5); fs(ICO_INK, 0); rr(30, 76, 40, 14, 4); fs('#8a6a3a', 4); });
+  D('lamp', () => { c.fillStyle = 'rgba(255,240,150,.35)'; circ(50, 54, 44); c.fill(); rr(38, 8, 24, 10, 3); fs('#5a626a', 4); c.beginPath(); c.moveTo(30, 20); c.lineTo(70, 20); c.lineTo(64, 80); c.lineTo(36, 80); c.closePath(); fs(R(48, 40, 50, 50, '#ffffff', '#ffd23a'));
+    line([[50, 20], [50, 80]], 'rgba(90,60,0,.4)', 3); rr(30, 80, 40, 10, 3); fs('#5a626a', 4); });
+  D('organ', () => { rr(14, 70, 72, 20, 4); fs(G(70, 90, '#8a5a30', '#5a3a1a')); [[22, 30], [34, 18], [46, 10], [58, 18], [70, 30]].forEach(([x, y]) => { rr(x - 5, y, 10, 72 - y, 3); fs(G(y, 70, '#fff3a0', '#c8902a'), 4); ell(x, y + 6, 3, 2); fs(ICO_INK, 0); }); });
+  D('music', () => { line([[36, 70], [36, 20], [76, 12], [76, 62]], ICO_INK, 9); line([[36, 70], [36, 20], [76, 12], [76, 62]], '#c8a8ff', 4); ell(28, 72, 12, 9, -0.4); fs('#c8a8ff'); ell(68, 64, 12, 9, -0.4); fs('#c8a8ff'); });
+  D('dredge', () => { ICONS.anchor(); });
+  D('horn', () => { c.beginPath(); c.moveTo(16, 44); c.lineTo(50, 40); c.quadraticCurveTo(70, 20, 86, 14); c.lineTo(86, 86); c.quadraticCurveTo(70, 80, 50, 60); c.lineTo(16, 56); c.closePath(); fs(G(14, 86, '#fff3a0', '#c8902a')); ell(86, 50, 6, 36); fs('#8a5a20', 4); rr(8, 42, 10, 16, 3); fs('#5a3a1a', 4); });
+  D('rocket', () => { c.beginPath(); c.moveTo(50, 8); c.quadraticCurveTo(72, 30, 66, 66); c.lineTo(34, 66); c.quadraticCurveTo(28, 30, 50, 8); fs(G(8, 66, '#ffffff', '#c8ced6')); circ(50, 36, 8); fs('#5ad1ff', 4);
+    poly([[34, 50], [20, 72], [34, 66]]); fs('#e8463a', 4); poly([[66, 50], [80, 72], [66, 66]]); fs('#e8463a', 4); c.beginPath(); c.moveTo(38, 68); c.quadraticCurveTo(50, 100, 62, 68); fs(G(66, 92, '#ffe24a', '#ff6a2a'), 3); });
+  D('hourglass', () => { rr(20, 8, 60, 10, 3); fs('#8a5a30', 4); rr(20, 82, 60, 10, 3); fs('#8a5a30', 4); c.beginPath(); c.moveTo(28, 18); c.lineTo(72, 18); c.quadraticCurveTo(72, 40, 54, 50); c.quadraticCurveTo(72, 60, 72, 82); c.lineTo(28, 82); c.quadraticCurveTo(28, 60, 46, 50); c.quadraticCurveTo(28, 40, 28, 18); fs('rgba(220,240,255,.7)');
+    c.beginPath(); c.moveTo(36, 82); c.quadraticCurveTo(50, 62, 64, 82); fs('#ffcf3a', 3); c.beginPath(); c.moveTo(36, 30); c.lineTo(64, 30); c.quadraticCurveTo(58, 42, 50, 46); c.quadraticCurveTo(42, 42, 36, 30); fs('#ffcf3a', 3); });
+  D('stopwatch', () => { rr(42, 6, 16, 10, 3); fs('#c8ced6', 4); circ(50, 56, 34); fs(G(22, 90, '#e8eef4', '#8a949e')); circ(50, 56, 26); fs('#fff', 4); line([[50, 56], [50, 36]], ICO_INK, 5); line([[50, 56], [64, 62]], '#e8463a', 4); });
+  D('key', () => { circ(28, 50, 18); fs(G(32, 68, '#fff3a0', '#c8902a')); circ(28, 50, 7); fs('#2a3a4a', 4); rr(42, 44, 48, 12, 4); fs(G(44, 56, '#fff3a0', '#c8902a')); rr(70, 56, 8, 14, 2); fs('#c8902a', 4); rr(82, 56, 8, 10, 2); fs('#c8902a', 4); });
+  D('lock', () => { c.beginPath(); c.arc(50, 40, 20, Math.PI, 0); st(ICO_INK, 14); c.beginPath(); c.arc(50, 40, 20, Math.PI, 0); st('#a8b4c0', 8); rr(20, 40, 60, 46, 8); fs(G(40, 86, '#ffd864', '#c8901b')); circ(50, 58, 7); fs(ICO_INK, 0); rr(47, 58, 6, 16, 2); fs(ICO_INK, 0); });
+  D('shield', () => { c.beginPath(); c.moveTo(50, 8); c.quadraticCurveTo(70, 18, 86, 18); c.quadraticCurveTo(86, 70, 50, 92); c.quadraticCurveTo(14, 70, 14, 18); c.quadraticCurveTo(30, 18, 50, 8); fs(G(8, 92, '#7ab8ff', '#2a5ea8')); c.beginPath(); c.moveTo(50, 20); c.quadraticCurveTo(64, 28, 74, 28); c.quadraticCurveTo(74, 64, 50, 80); fs('rgba(255,255,255,.25)', 0); });
+  D('knot', () => { c.beginPath(); c.moveTo(14, 70); c.bezierCurveTo(30, 20, 70, 20, 60, 50); c.bezierCurveTo(52, 72, 26, 56, 46, 40); c.bezierCurveTo(66, 24, 86, 50, 88, 28); st(ICO_INK, 15); c.beginPath(); c.moveTo(14, 70); c.bezierCurveTo(30, 20, 70, 20, 60, 50); c.bezierCurveTo(52, 72, 26, 56, 46, 40); c.bezierCurveTo(66, 24, 86, 50, 88, 28); st('#e8d09a', 9); });
+  D('log', () => { rr(12, 34, 70, 36, 16); fs(G(34, 70, '#b8864a', '#6a4a26')); ell(80, 52, 12, 18); fs('#e8c890'); ell(80, 52, 6, 10); st('#a0743e', 3); line([[24, 44], [62, 44]], 'rgba(0,0,0,.25)', 3); line([[30, 58], [66, 58]], 'rgba(0,0,0,.25)', 3); });
+  D('crate', () => { rr(14, 20, 72, 66, 4); fs(G(20, 86, '#d8a86a', '#8a5a30')); line([[14, 20], [86, 86]], ICO_INK, 5); line([[14, 20], [86, 86]], '#b8864a', 2); line([[14, 40], [86, 40]], 'rgba(0,0,0,.3)', 3); line([[14, 66], [86, 66]], 'rgba(0,0,0,.3)', 3); });
+  D('basket', () => { c.beginPath(); c.arc(50, 46, 28, Math.PI, 0); st(ICO_INK, 12); c.beginPath(); c.arc(50, 46, 28, Math.PI, 0); st('#c8965a', 6); c.beginPath(); c.moveTo(12, 46); c.lineTo(88, 46); c.lineTo(78, 88); c.lineTo(22, 88); c.closePath(); fs(G(46, 88, '#e8b878', '#9a6a3a'));
+    for (let i = 0; i < 4; i++) line([[16 + i * 2, 56 + i * 9], [84 - i * 2, 56 + i * 9]], 'rgba(90,50,20,.5)', 2.5); });
+  D('bag', () => { rr(20, 30, 60, 58, 14); fs(G(30, 88, '#7ab84a', '#3a7a2a')); c.beginPath(); c.arc(50, 32, 14, Math.PI, 0); st(ICO_INK, 9); c.beginPath(); c.arc(50, 32, 14, Math.PI, 0); st('#5a9a3a', 4); rr(30, 52, 40, 22, 6); fs('#5a9a3a', 4); });
+  D('book', () => { rr(18, 12, 60, 78, 6); fs(G(12, 90, '#5a8ae8', '#2a4aa8')); rr(70, 16, 12, 72, 3); fs('#fff8e8', 4); rr(30, 26, 36, 10, 2); fs('#ffcf3a', 3); shine(28, 50, 3, 14, 0); });
+  D('scroll', () => { rr(20, 18, 60, 64, 4); fs(G(18, 82, '#fff4d8', '#e8d0a0')); ell(50, 18, 34, 8); fs('#c8a46a', 4); ell(50, 82, 34, 8); fs('#c8a46a', 4); for (let i = 0; i < 4; i++) line([[30, 34 + i * 11], [70 - (i % 2) * 10, 34 + i * 11]], 'rgba(90,60,30,.5)', 3); });
+  D('deal', () => { ICONS.scroll(); circ(70, 76, 12); fs('#e8463a', 4); star(70, 76, 6, 3); fs('#ffd0c8', 0); });
+  D('letter', () => { rr(10, 24, 80, 56, 6); fs(G(24, 80, '#fff8e8', '#e0d4bc')); line([[12, 28], [50, 56], [88, 28]], ICO_INK, 4); circ(50, 56, 8); fs('#e8463a', 3); });
+  D('news', () => { rr(12, 16, 76, 68, 6); fs(G(16, 84, '#ffffff', '#dfe4ea')); rr(20, 24, 60, 14, 2); fs('#3a4a5a', 0); for (let i = 0; i < 4; i++) { line([[20, 48 + i * 9], [46, 48 + i * 9]], '#8a949e', 3); line([[54, 48 + i * 9], [80, 48 + i * 9]], '#8a949e', 3); } });
+  D('save', () => { rr(14, 14, 72, 72, 8); fs(G(14, 86, '#5a8ae8', '#2a4aa8')); rr(28, 14, 44, 24, 3); fs('#e8eef4', 4); rr(58, 18, 8, 16, 2); fs('#2a4aa8', 0); rr(24, 52, 52, 34, 4); fs('#fff8e8', 4); });
+  D('question', () => { circ(50, 50, 38); fs(G(12, 88, '#7ab8ff', '#2a5ea8')); c.fillStyle = '#fff'; c.font = 'bold 54px Fredoka, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', 50, 54); });
+  D('speaker', () => { poly([[16, 38], [34, 38], [56, 18], [56, 82], [34, 62], [16, 62]]); fs(G(18, 82, '#e8eef4', '#8a949e')); [14, 26].forEach(r => { c.beginPath(); c.arc(56, 50, r, -0.8, 0.8); st(ICO_INK, 5); }); });
+  D('pointer', () => { poly([[30, 12], [30, 76], [44, 62], [56, 88], [66, 84], [54, 58], [74, 58]]); fs(G(12, 88, '#ffffff', '#c8d4e2')); });
+  D('door', () => { rr(24, 10, 52, 80, 6); fs(G(10, 90, '#b8864a', '#6a4a26')); circ(64, 52, 5); fs('#ffcf3a', 3); rr(32, 20, 36, 24, 3); st('rgba(0,0,0,.3)', 3); });
+  D('house', () => { poly([[14, 46], [50, 14], [86, 46]]); fs(G(14, 46, '#ff7a5a', '#b83a2a')); rr(22, 44, 56, 44, 3); fs(G(44, 88, '#f4e8d0', '#d8c4a0')); rr(42, 60, 16, 28, 2); fs('#8a5a30', 4); rr(28, 52, 10, 10, 1); fs('#9fd8f0', 3); rr(62, 52, 10, 10, 1); fs('#9fd8f0', 3); });
+  D('columns', () => { poly([[10, 32], [50, 10], [90, 32]]); fs(G(10, 32, '#e8e2d4', '#b8b0a0')); rr(12, 32, 76, 8, 2); fs('#d8d0c0', 4); for (let i = 0; i < 4; i++) { rr(18 + i * 18, 40, 10, 38, 2); fs(G(40, 78, '#ffffff', '#c8c0b0'), 4); } rr(10, 78, 80, 12, 2); fs('#a89c88', 4); });
+  D('skull', () => { c.beginPath(); c.arc(50, 42, 32, Math.PI * 0.85, Math.PI * 2.15); c.lineTo(70, 74); c.lineTo(30, 74); c.closePath(); fs(G(10, 74, '#ffffff', '#c8c0b0')); rr(34, 70, 32, 18, 4); fs('#e8e2d4', 4);
+    ell(38, 44, 9, 10); fs(ICO_INK, 0); ell(62, 44, 9, 10); fs(ICO_INK, 0); poly([[50, 54], [44, 64], [56, 64]]); fs(ICO_INK, 0); line([[42, 76], [42, 86]], ICO_INK, 3); line([[50, 76], [50, 86]], ICO_INK, 3); line([[58, 76], [58, 86]], ICO_INK, 3); });
+  D('check', () => { circ(50, 50, 38); fs(G(12, 88, '#8affa0', '#2fa84a')); line([[30, 52], [44, 66], [70, 36]], '#fff', 10); });
+  D('talisman', () => { line([[50, 6], [50, 18]], '#8a5a30', 4); circ(50, 54, 36); fs(G(18, 90, '#5a8ae8', '#1a3a9a')); circ(50, 54, 25); fs('#ffffff', 0); circ(50, 54, 17); fs('#7ac8ff', 0); circ(50, 54, 9); fs(ICO_INK, 0); circ(46, 50, 3); fs('#fff', 0); });
+  D('eye', () => { c.beginPath(); c.moveTo(8, 50); c.quadraticCurveTo(50, 8, 92, 50); c.quadraticCurveTo(50, 92, 8, 50); fs('#fff'); circ(50, 50, 18); fs(G(32, 68, '#7ad8ff', '#2a7ab8'), 4); circ(50, 50, 8); fs(ICO_INK, 0); circ(45, 45, 4); fs('#fff', 0); });
+  D('target', () => { circ(46, 54, 36); fs('#fff'); circ(46, 54, 26); fs('#e8463a', 4); circ(46, 54, 16); fs('#fff', 4); circ(46, 54, 7); fs('#e8463a', 3); line([[46, 54], [88, 12]], ICO_INK, 6); line([[46, 54], [88, 12]], '#8a5a30', 3); poly([[80, 8], [92, 8], [92, 20]]); fs('#5affd0', 3); });
+  D('snail', () => { ell(50, 76, 40, 10); fs(G(66, 86, '#c8e08a', '#7a9a3a')); circ(56, 50, 26); fs(G(24, 76, '#ffc86a', '#c8702a')); c.beginPath(); for (let a = 0; a < Math.PI * 3.5; a += 0.2) { const r = 22 - a * 1.9; a ? c.lineTo(56 + Math.cos(a) * r, 50 + Math.sin(a) * r) : c.moveTo(56 + r, 50); } st('rgba(100,50,0,.6)', 3);
+    line([[18, 70], [14, 52]], ICO_INK, 4); line([[24, 70], [26, 54]], ICO_INK, 4); circ(14, 50, 4); fs(ICO_INK, 0); circ(26, 52, 4); fs(ICO_INK, 0); });
+  D('clover', () => { [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy]) => { c.beginPath(); const x = 50 + dx * 18, y = 46 + dy * 18; c.arc(x - dy * 6, y + dx * 6, 14, 0, Math.PI * 2); c.arc(x + dy * 6, y - dx * 6, 14, 0, Math.PI * 2); fs(G(14, 80, '#8ae07a', '#2f8a3a'), 4); });
+    c.beginPath(); c.moveTo(50, 50); c.quadraticCurveTo(54, 76, 66, 92); st(ICO_INK, 8); c.beginPath(); c.moveTo(50, 50); c.quadraticCurveTo(54, 76, 66, 92); st('#3f8a3a', 4); });
+  D('dice', () => { c.save(); c.translate(36, 52); c.rotate(-0.25); rr(-24, -24, 48, 48, 9); fs(G(-24, 24, '#ffffff', '#d8dce4')); [[-11, -11], [11, 11], [0, 0]].forEach(([x, y]) => { circ(x, y, 5); fs('#e8463a', 0); }); c.restore();
+    c.save(); c.translate(70, 40); c.rotate(0.3); rr(-18, -18, 36, 36, 7); fs(G(-18, 18, '#ffffff', '#d8dce4')); [[-8, -8], [8, 8]].forEach(([x, y]) => { circ(x, y, 4); fs(ICO_INK, 0); }); c.restore(); });
+  D('fist', () => { rr(20, 30, 54, 50, 16); fs(G(30, 80, '#ffd8b0', '#d8946a')); for (let i = 0; i < 3; i++) line([[34 + i * 13, 32], [34 + i * 13, 50]], 'rgba(120,60,30,.6)', 3); rr(60, 48, 26, 22, 10); fs(G(48, 70, '#ffd8b0', '#d8946a')); rr(24, 78, 46, 12, 4); fs('#3a86c8', 4); });
+  D('handfx', () => ICONS.fist());
+  D('sos', () => { line([[30, 90], [30, 10]], ICO_INK, 8); line([[30, 90], [30, 10]], '#8a5a30', 4); c.beginPath(); c.moveTo(30, 12); c.quadraticCurveTo(60, 4, 88, 18); c.lineTo(88, 50); c.quadraticCurveTo(60, 40, 30, 48); c.closePath(); fs('#fff');
+    c.fillStyle = '#e8463a'; c.font = 'bold 20px Fredoka, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SOS', 59, 30); });
+  D('crown', () => { poly([[14, 76], [14, 30], [32, 50], [50, 20], [68, 50], [86, 30], [86, 76]]); fs(G(20, 76, '#fff3a0', '#e8a91b')); rr(12, 72, 76, 14, 3); fs('#c8902a', 4); circ(50, 58, 6); fs('#e8463a', 3); circ(30, 62, 4); fs('#5ad1ff', 3); circ(70, 62, 4); fs('#5ad1ff', 3); });
+  D('heartwrench', () => { c.beginPath(); c.moveTo(50, 86); c.bezierCurveTo(6, 56, 14, 14, 50, 32); c.bezierCurveTo(86, 14, 94, 56, 50, 86); fs(G(14, 86, '#ff8a8a', '#c8302a')); c.save(); c.translate(6, 6); c.scale(0.6, 0.6); c.translate(30, 30); ICONS.wrench(); c.restore(); });
+  D('hullfix', () => { rr(10, 44, 80, 28, 6); fs(G(44, 72, '#c88a4a', '#7a4a22')); line([[24, 44], [24, 72]], 'rgba(0,0,0,.3)', 3); line([[50, 44], [50, 72]], 'rgba(0,0,0,.3)', 3); line([[76, 44], [76, 72]], 'rgba(0,0,0,.3)', 3); c.save(); c.translate(56, 6); c.scale(0.5, 0.5); ICONS.hammer(); c.restore(); });
+  D('bobber', () => { c.setLineDash([6, 6]); c.beginPath(); c.moveTo(10, 80); c.quadraticCurveTo(40, 0, 76, 48); st('rgba(255,255,255,.9)', 4); c.setLineDash([]); circ(76, 58, 12); fs('#fff'); c.beginPath(); c.arc(76, 58, 12, 0, Math.PI); c.closePath(); fs('#e8463a', 0); circ(76, 58, 12); st(ICO_INK, 4); line([[76, 46], [76, 36]], ICO_INK, 4); });
+  D('magnet', () => { c.beginPath(); c.arc(50, 50, 30, Math.PI, 0); c.lineTo(80, 82); c.lineTo(62, 82); c.lineTo(62, 50); c.arc(50, 50, 12, 0, Math.PI, true); c.lineTo(38, 82); c.lineTo(20, 82); c.closePath(); fs(G(20, 82, '#ff6a6a', '#b82a2a')); rr(20, 70, 18, 12, 2); fs('#d8dee4', 4); rr(62, 70, 18, 12, 2); fs('#d8dee4', 4); });
+  D('boost', () => ICONS.rocket());
+})();
+// emoji -> icon name (used to swap emoji in UI text for drawn art)
+const EMOJI_ICON = {
+  '✨': 'sparkle', '🔒': 'lock', '🛸': 'drone', '🐟': 'fish', '🌀': 'swirl', '🏆': 'trophy', '💎': 'gem', '🧿': 'talisman', '⛵': 'sail', '☠': 'skull', '🤖': 'robot', '📦': 'chest', '🎣': 'rod', '⚓': 'anchor',
+  '🐚': 'shell', '⚒': 'anvil', '🛟': 'buoy', '⭐': 'star', '🔧': 'wrench', '🛠': 'wrench', '⚙': 'gear', '🪱': 'worm', '🪵': 'log', '🏝': 'island', '🛡': 'shield', '📬': 'letter', '🏛': 'columns', '📯': 'horn',
+  '🕸': 'net', '🥅': 'net', '🔆': 'lamp', '🎶': 'music', '🐙': 'octopus', '🏠': 'house', '⚡': 'bolt', '🚀': 'rocket', '💰': 'coins', '🪙': 'coins', '💨': 'wind', '🌬': 'wind', '🍀': 'clover', '🤝': 'deal',
+  '⛏': 'pickaxe', '📘': 'book', '🌟': 'goldstar', '⏳': 'hourglass', '⏱': 'stopwatch', '☁': 'cloud', '🌫': 'cloud', '🔑': 'key', '❓': 'question', '📰': 'news', '💦': 'splash', '📜': 'scroll', '🦪': 'oyster',
+  '🆘': 'sos', '📡': 'radar', '🦾': 'claw', '🧊': 'ice', '🪢': 'knot', '👁': 'eye', '🧘': 'snail', '🎯': 'target', '🌊': 'wave', '🔭': 'spyglass', '🎲': 'dice', '✊': 'fist', '🎒': 'bag', '🧭': 'compass',
+  '🏦': 'vault', '🏅': 'medal', '🛥': 'boat', '🛶': 'boat', '🧺': 'basket', '💾': 'save', '⏏': 'door', '🔊': 'speaker', '♿': 'pointer', '🏷': 'tag', '🗺': 'map', '🌩': 'storm', '🐠': 'fish', '👑': 'crown', '🎨': 'goldstar'
+};
+const EMOJI_RE = new RegExp('(' + Object.keys(EMOJI_ICON).map(e => e.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\uFE0F?', 'g');
+function drawIcon(c, name, cx, cy, size, t) {
+  const fn = ICONS[name]; if (!fn) return;
+  c.save(); c.translate(cx - size / 2, cy - size / 2); c.scale(size / 100, size / 100); c.lineJoin = 'round'; c.lineCap = 'round';
+  ICONS._set(c); try { fn(t || 0); } catch (e) { } c.restore();
+}
+// HTML: swap emoji for little icon canvases (drawn by drawIcons)
+function iconize(html) { return String(html).replace(EMOJI_RE, (m, e) => `<canvas class="ico" data-icon="${EMOJI_ICON[e]}" width="64" height="64"></canvas>`); }
+function iconHTML(name, cls) { return `<canvas class="ico ${cls || ''}" data-icon="${name}" width="64" height="64"></canvas>`; }
+function paintIcons(root) { (root || document).querySelectorAll('canvas[data-icon]').forEach(cv => { if (cv._drawn === cv.dataset.icon) return; const c = cv.getContext('2d'); c.clearRect(0, 0, cv.width, cv.height); drawIcon(c, cv.dataset.icon, cv.width / 2, cv.height / 2, Math.min(cv.width, cv.height) * 0.94); cv._drawn = cv.dataset.icon; }); }
+// Canvas text with inline icons (labels, bubbles, floating text)
+function splitIcons(txt) { const out = []; let last = 0; String(txt).replace(EMOJI_RE, (m, e, i) => { if (i > last) out.push(txt.slice(last, i)); out.push({ icon: EMOJI_ICON[e] }); last = i + m.length; return m; }); if (last < txt.length) out.push(txt.slice(last)); return out; }
+function textIcons(c, txt, x, y, size, mode) {
+  txt = String(txt); EMOJI_RE.lastIndex = 0; const has = EMOJI_RE.test(txt); EMOJI_RE.lastIndex = 0;
+  if (!has) { if (mode !== 'fill') c.strokeText(txt, x, y); if (mode !== 'stroke') c.fillText(txt, x, y); return; }
+  const parts = splitIcons(txt).map(p => typeof p === 'string' ? p.replace(/^\s+|\s+$/g, ' ') : p), iw = size * 1.15;
+  const widths = parts.map(p => typeof p === 'string' ? c.measureText(p).width : iw), total = widths.reduce((a, b) => a + b, 0);
+  const al = c.textAlign; let cx = al === 'center' ? x - total / 2 : al === 'right' || al === 'end' ? x - total : x;
+  c.textAlign = 'left';
+  parts.forEach((p, i) => { if (typeof p === 'string') { if (mode !== 'fill') c.strokeText(p, cx, y); if (mode !== 'stroke') c.fillText(p, cx, y); } else if (mode !== 'stroke') { const yy = c.textBaseline === 'middle' ? y : y - size * 0.35; drawIcon(c, p.icon, cx + iw / 2, yy, iw); } cx += widths[i]; });
+  c.textAlign = al;
+}
+
+// ================================================================
 //  SCENES
 // ================================================================
 const Scenes = {};
@@ -2620,7 +2845,7 @@ function drawP(c, list) {
     const k = p.life / p.max;
     c.globalAlpha = p.fade ? Math.min(1, k * 1.5) : 1;
     c.fillStyle = p.col;
-    if (p.txt) { c.font = `bold ${p.r}px Fredoka, sans-serif`; c.textAlign = 'center'; c.strokeStyle = 'rgba(0,0,0,.6)'; c.lineWidth = 3; c.strokeText(p.txt, p.x, p.y); c.fillText(p.txt, p.x, p.y); }
+    if (p.txt) { c.font = `bold ${p.r}px Fredoka, sans-serif`; c.textAlign = 'center'; c.strokeStyle = 'rgba(0,0,0,.6)'; c.lineWidth = 3; c.textBaseline = 'alphabetic'; textIcons(c, p.txt, p.x, p.y, p.r); }
     else if (p.ring) { c.strokeStyle = p.col; c.lineWidth = 2; c.beginPath(); c.arc(p.x, p.y, p.r * (1 + (1 - k) * p.ring), 0, TAU); c.stroke(); }
     else { c.beginPath(); c.arc(p.x, p.y, Math.max(0.3, p.shrink ? p.r * k : p.r), 0, TAU); c.fill(); }
   }
@@ -2671,10 +2896,10 @@ Scenes.menu = {
 
 // ================================================================
 function bubble(c, x, y, txt) {
-  c.font = 'bold 14px Fredoka, sans-serif'; const w = c.measureText(txt).width + 18;
+  c.font = 'bold 14px Fredoka, sans-serif'; const w = c.measureText(String(txt).replace(EMOJI_RE, 'WW')).width + 18;
   c.fillStyle = 'rgba(255,255,255,.95)'; rrect(c, x - w / 2, y - 14, w, 26, 10); c.fill();
   c.beginPath(); c.moveTo(x - 6, y + 12); c.lineTo(x, y + 19); c.lineTo(x + 6, y + 12); c.fill();
-  c.fillStyle = '#123'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x, y);
+  c.fillStyle = '#123'; c.textAlign = 'center'; c.textBaseline = 'middle'; textIcons(c, txt, x, y, 14, 'fill');
 }
 function questArrowDown(c, x, y) {
   c.save(); c.translate(x, y); c.fillStyle = '#ffd23a'; c.strokeStyle = '#7a4a00'; c.lineWidth = 3; c.shadowColor = '#ffd23a'; c.shadowBlur = 14;
@@ -3059,7 +3284,7 @@ function bldLabel(c, B, y, hov) {
   c.fillStyle = 'rgba(12,12,16,.92)'; c.beginPath(); c.moveTo(-w / 2 - 6, -20); c.lineTo(w / 2 + 6, -20); c.lineTo(w / 2, 20); c.lineTo(-w / 2, 20); c.closePath(); c.fill();
   c.strokeStyle = hov ? '#ffe9a8' : 'rgba(255,255,255,.3)'; c.lineWidth = 2; c.stroke();
   c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'middle';
-  c.font = '20px sans-serif'; c.fillText(B.icon, -w / 2 + 12, 1);
+  drawIcon(c, EMOJI_ICON[B.icon.replace('\uFE0F', '')] || 'star', -w / 2 + 24, 1, 28);
   c.font = 'bold 22px Fredoka, sans-serif'; c.fillText(name, -w / 2 + 44, 1);
   if (lvTxt) { c.font = 'bold 15px Fredoka, sans-serif'; c.fillStyle = '#ffd23a'; c.fillText(lvTxt, -w / 2 + 54 + tw, 1); }
   c.beginPath(); c.fillStyle = 'rgba(12,12,16,.92)'; c.moveTo(-8, 20); c.lineTo(0, 30); c.lineTo(8, 20); c.fill();
@@ -3067,13 +3292,24 @@ function bldLabel(c, B, y, hov) {
 }
 
 // ---------------- building art ----------------
+// Building looks grow one step per level (Update 4+):
+//  L1 starter buildings are BROKEN (weathered wood, holes, boarded windows)
+//  L1 newly built buildings are PALE & plain   ·  L2 painted & repaired, a lantern
+//  L3 an extra back wing + stone footing        ·  L4 textured walls (stone / timber frame) + a flag
+//  L5 a roof dormer, gold trim and string lights
+const STARTER_OWNERS = ['pip', 'marlow', 'bram', 'wren'];
+function bldStage(B, L) { return L > 1 ? 'ok' : STARTER_OWNERS.includes(B.owner) ? 'broken' : 'pale'; }
+function mixCol(a, b, t) { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), Bc = p(b); return '#' + A.map((v, i) => Math.round(v + (Bc[i] - v) * t).toString(16).padStart(2, '0')).join(''); }
+const BLD_WALL = { shrine: '#5a4a6a', workshop: '#b8603a', market: '#eadcc4', tackle: '#7a9a84', boatyard: '#b8784a', forge: '#9a948c', museum: '#f0e6d4', boutique: '#a65ab4', autodock: '#7a8a9a' };
+const BLD_ROOF = { shrine: '#2e2a4a', workshop: '#3a4a5a', market: '#c8453a', tackle: '#45586a', boatyard: '#5c4a3a', forge: '#45454e', museum: '#4a6a8e', boutique: '#3a2a5e', townhall: '#36557a', autodock: '#3a4a5a' };
 function bldWall(B, L) {
-  if (L <= 1 && B.kind !== 'townhall') return '#8a7a66';
-  return { shrine: '#5a4a6a', workshop: '#b8603a', market: '#eadcc4', tackle: '#7a9a84', boatyard: '#b8784a', forge: '#9a948c', museum: '#f0e6d4', boutique: '#a65ab4', townhall: L >= 3 ? '#d4ccbc' : '#a8946e' }[B.kind] || '#999';
+  if (B.kind === 'townhall') return L >= 3 ? '#d4ccbc' : L >= 2 ? '#a8946e' : '#8a7a66';
+  const st = bldStage(B, L), real = BLD_WALL[B.kind] || '#999';
+  return st === 'broken' ? '#8a7a66' : st === 'pale' ? mixCol(real, '#e4ded2', 0.62) : L === 2 ? mixCol(real, '#ffffff', 0.08) : real;
 }
 function bldRoof(B, L) {
-  if (L <= 1 && B.kind !== 'townhall') return '#6a5c4c';
-  return { shrine: '#2e2a4a', workshop: '#3a4a5a', market: '#c8453a', tackle: '#45586a', boatyard: '#5c4a3a', forge: '#45454e', museum: '#4a6a8e', boutique: '#3a2a5e', townhall: '#36557a' }[B.kind] || '#666';
+  const st = B.kind === 'townhall' ? (L <= 1 ? 'broken' : 'ok') : bldStage(B, L), real = BLD_ROOF[B.kind] || '#666';
+  return st === 'broken' ? '#6a5c4c' : st === 'pale' ? mixCol(real, '#c8c4bc', 0.6) : real;
 }
 function poly(c, pts, fill) { c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } }
 // generic 3/4 gable house. returns geometry
@@ -3095,6 +3331,12 @@ function house(c, o) {
   const bg = c.createLinearGradient(0, y - 14, 0, y); bg.addColorStop(0, 'rgba(0,0,0,0)'); bg.addColorStop(1, 'rgba(0,0,0,.18)'); c.fillStyle = bg; c.fillRect(fl, y - 14, w, 14);
   // stone base
   if (o.base) { c.fillStyle = '#8a857c'; c.fillRect(fl - 2, y - h * 0.16, w + 2, h * 0.16); poly(c, [[fr, y], [fr + dx, y + dy], [fr + dx, y + dy - h * 0.16], [fr, y - h * 0.16]], '#6a665e'); c.fillStyle = 'rgba(255,255,255,.12)'; for (let xx = fl; xx < fr; xx += 16) c.fillRect(xx + 1, y - h * 0.16 + 2, 13, h * 0.07); }
+  if (o.frame) { c.strokeStyle = shade(wall, -0.45); c.lineWidth = 3.5; c.strokeRect(fl + 2, top + 2, w - 4, h - 4); const n = Math.max(2, Math.round(w / 36)); for (let i = 1; i < n; i++) { const xx = fl + i * w / n; c.beginPath(); c.moveTo(xx, top); c.lineTo(xx, y); c.stroke(); } c.beginPath(); c.moveTo(fl, top + h * 0.45); c.lineTo(fr, top + h * 0.45); c.stroke(); for (let i = 0; i < n; i++) { const x0 = fl + i * w / n; c.beginPath(); c.moveTo(x0, top + h * 0.45); c.lineTo(x0 + w / n, top); c.stroke(); } }
+  if (o.broken) { // missing planks, grime, a crooked board
+    c.fillStyle = 'rgba(30,20,12,.55)'; [[0.12, 0.3, 0.07, 0.22], [0.78, 0.55, 0.08, 0.18], [0.45, 0.12, 0.1, 0.08]].forEach(([u, v, ww, hh]) => c.fillRect(fl + u * w, top + v * h, ww * w, hh * h));
+    const gg = c.createLinearGradient(0, y - h * 0.4, 0, y); gg.addColorStop(0, 'rgba(60,80,40,0)'); gg.addColorStop(1, 'rgba(60,80,40,.35)'); c.fillStyle = gg; c.fillRect(fl, y - h * 0.4, w, h * 0.4);
+    c.save(); c.translate(fl + w * 0.62, top + h * 0.38); c.rotate(-0.35); c.fillStyle = '#a08a68'; c.fillRect(-w * 0.18, -4, w * 0.36, 8); c.fillStyle = '#3a3a3a'; c.fillRect(-w * 0.15, -1, 2.5, 2.5); c.fillRect(w * 0.14, -1, 2.5, 2.5); c.restore();
+  }
   // roof plane
   const rp = [[x, top - rh], [x + dx, top - rh + dy], [fr + dx + ov, top + dy + ov * 0.55], [fr + ov, top + ov * 0.55]];
   poly(c, rp, roofS);
@@ -3104,6 +3346,12 @@ function house(c, o) {
   for (let i = 1; i < 9; i++) { const u = i / 9; const ax = lerp(x, fr + ov, u), ay = lerp(top - rh, top + ov * 0.55, u); c.beginPath(); c.moveTo(ax, ay); c.lineTo(ax + dx, ay + dy); c.stroke(); }
   if (o.patches) { c.fillStyle = 'rgba(90,70,50,.7)'; for (let i = 0; i < o.patches; i++) { const u = 0.3 + i * 0.25; const ax = lerp(x, fr, u) + dx * 0.4, ay = lerp(top - rh, top, u) + dy * 0.4; c.fillRect(ax - 7, ay - 5, 14, 10); } }
   c.fillStyle = 'rgba(255,255,255,.08)'; c.beginPath(); c.moveTo(x, top - rh); c.lineTo(x + dx, top - rh + dy); c.lineTo(x + dx + 10, top - rh + dy + 6); c.lineTo(x + 10, top - rh + 6); c.fill();
+  if (o.shingles) { c.fillStyle = 'rgba(0,0,0,.12)'; for (let i = 1; i < 9; i++) for (let j = 0; j < 6; j++) { const u = (i + (j % 2) * 0.5) / 9, v = j / 6; const ax = lerp(x, fr + ov, u) + dx * v, ay = lerp(top - rh, top + ov * 0.55, u) + dy * v; c.beginPath(); c.arc(ax, ay, 3.2, 0, Math.PI); c.fill(); } }
+  if (o.broken) { // a hole in the roof with bare rafters
+    const hp = (u, v) => [lerp(x, fr + ov, u) + dx * v, lerp(top - rh, top + ov * 0.55, u) + dy * v];
+    c.fillStyle = '#1e1610'; c.beginPath(); [[0.38, 0.25], [0.5, 0.18], [0.66, 0.3], [0.62, 0.55], [0.46, 0.62], [0.36, 0.45]].forEach(([u, v], i) => { const [px, py] = hp(u, v); i ? c.lineTo(px, py) : c.moveTo(px, py); }); c.closePath(); c.fill();
+    c.strokeStyle = '#7a5a36'; c.lineWidth = 2.5; [0.45, 0.55].forEach(u => { const [ax, ay] = hp(u, 0.18), [bx, by] = hp(u, 0.6); c.beginPath(); c.moveTo(ax, ay); c.lineTo(bx, by); c.stroke(); });
+  }
   c.restore();
   // eave boards on gable
   c.strokeStyle = roof; c.lineWidth = 8; c.lineCap = 'round'; c.lineJoin = 'round';
@@ -3165,11 +3413,15 @@ function drawBuilding(c, B, L, t, scn) {
   const sc = 1 + 0.06 * (L - 1), hs = 1 + 0.1 * (L - 1);
   const w = B.w * sc, h = B.h * hs, d = B.d * sc, x = B.x, y = B.y;
   const wall = bldWall(B, L), roof = bldRoof(B, L), gold = L >= 5 ? '#ffd23a' : null;
-  const lit = S.village >= 3 || L >= 3;
-  const base = { x, y, w, h, d, wall, roof, planks: L <= 2 || ['boatyard', 'tackle', 'market'].includes(B.kind), patches: L <= 1 ? 2 : 0, base: L >= 3 && B.kind !== 'forge', trim: gold || (L >= 2 ? '#f4ecd8' : null) };
+  const stage = B.kind === 'townhall' ? (S.village <= 1 ? 'broken' : 'ok') : bldStage(B, L);
+  const lit = (S.village >= 3 || L >= 3) && stage === 'ok';
+  const woody = ['boatyard', 'tackle', 'market'].includes(B.kind);
+  const base = { x, y, w, h, d, wall, roof, planks: L <= 3 || woody, patches: stage === 'broken' ? 3 : 0, broken: stage === 'broken', base: L >= 3 && B.kind !== 'forge',
+    stones: L >= 4 && !woody, frame: L >= 4 && woody, shingles: L >= 4, trim: gold || (L >= 2 ? '#f4ecd8' : null) };
+  if (B.kind === 'autodock') return drawAutoDock(c, B, L, t, scn, w, h, d);
+  if (L >= 3 && B.kind !== 'townhall') rearWing(c, B, L, x, y, w, h, d, wall, roof, lit);
   let g;
   switch (B.kind) {
-    case 'autodock': return drawAutoDock(c, B, L, t, scn, w, h, d);
     case 'market': {
       g = house(c, Object.assign(base, { rh: w * 0.28 }));
       // open stall front
@@ -3191,7 +3443,7 @@ function drawBuilding(c, B, L, t, scn) {
       break;
     }
     case 'shrine': {
-      g = house(c, Object.assign(base, { rh: w * 0.42, wall: L <= 1 ? '#7a6a5a' : '#5a4a6a', roof: L <= 1 ? '#5a4c3c' : '#2e2a4a', trim: L >= 5 ? '#ffd23a' : L >= 2 ? '#c8a8ff' : null }));
+      g = house(c, Object.assign(base, { rh: w * 0.42, trim: L >= 5 ? '#ffd23a' : L >= 2 ? '#c8a8ff' : null }));
       doorD(c, x - w * 0.12, y, w * 0.26, h * 0.6, '#3a2a3a');
       const wx = x + w * 0.2, wy = y - h * 0.62;
       c.fillStyle = '#2a2240'; c.beginPath(); c.arc(wx, wy, w * 0.11, 0, TAU); c.fill();
@@ -3208,7 +3460,7 @@ function drawBuilding(c, B, L, t, scn) {
       break;
     }
     case 'workshop': {
-      g = house(c, Object.assign(base, { rh: w * 0.24, stones: L >= 2, planks: L < 2, wall: L <= 1 ? '#8a7a66' : '#b8603a', roof: L <= 1 ? '#6a5c4c' : '#3a4a5a' }));
+      g = house(c, Object.assign(base, { rh: w * 0.24 }));
       c.fillStyle = '#2a2a30'; c.fillRect(x - w * 0.36, y - h * 0.66, w * 0.46, h * 0.66);
       c.strokeStyle = '#5a5a60'; c.lineWidth = 2; for (let i = 1; i < 5; i++) { c.beginPath(); c.moveTo(x - w * 0.36, y - h * 0.66 + i * h * 0.13); c.lineTo(x + w * 0.1, y - h * 0.66 + i * h * 0.13); c.stroke(); }
       windowW(c, x + w * 0.2, y - h * 0.66, w * 0.18, h * 0.24, { lit: true, frame: '#3a4a5a' });
@@ -3263,7 +3515,7 @@ function drawBuilding(c, B, L, t, scn) {
       break;
     }
     case 'forge': {
-      g = house(c, Object.assign(base, { rh: w * 0.3, stones: true, planks: false }));
+      g = house(c, Object.assign(base, { rh: w * 0.3, stones: L >= 2, planks: L < 2 }));
       // big chimney
       const [chx, chy] = chimney(c, g, 0.35, 0.55, 26, 64 + L * 6, '#6a645c');
       c.fillStyle = `rgba(255,${110 + Math.sin(t * 7) * 50 | 0},40,.9)`; c.shadowColor = '#ff7a2a'; c.shadowBlur = 16; c.fillRect(chx - 10, chy - 3, 20, 5); c.shadowBlur = 0;
@@ -3303,7 +3555,7 @@ function drawBuilding(c, B, L, t, scn) {
       break;
     }
     case 'boutique': {
-      g = house(c, Object.assign(base, { rh: w * 0.34, trim: '#ffd23a' }));
+      g = house(c, Object.assign(base, { rh: w * 0.34, trim: L >= 2 ? '#ffd23a' : null }));
       c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(x, y - h - w * 0.12, w * 0.07, 0, TAU); c.fill();
       c.fillStyle = '#8affff'; c.beginPath(); c.arc(x, y - h - w * 0.12, w * 0.05, 0, TAU); c.fill();
       windowW(c, x - w * 0.36, y - h * 0.7, w * 0.22, h * 0.32, { lit: true, frame: '#ffd23a' });
@@ -3315,13 +3567,14 @@ function drawBuilding(c, B, L, t, scn) {
       c.save(); c.translate(g.fr + 16, y - h * 0.7); c.fillStyle = '#5affd0'; c.shadowColor = '#5affd0'; c.shadowBlur = 10 + Math.sin(t * 3) * 5; c.beginPath(); c.moveTo(0, -12); c.lineTo(10, -2); c.lineTo(0, 14); c.lineTo(-10, -2); c.closePath(); c.fill(); c.restore();
       // pots
       [g.fl - 10, x + w * 0.42].forEach(px => { c.fillStyle = '#b8603a'; c.fillRect(px - 7, y - 12, 14, 12); c.fillStyle = '#3f8a3a'; c.beginPath(); c.arc(px, y - 16, 9, 0, TAU); c.fill(); c.fillStyle = '#ff7ad8'; c.beginPath(); c.arc(px + 3, y - 20, 3, 0, TAU); c.fill(); });
-      if (L >= 3) stringLights(c, g, t);
+      if (L >= 2) lantern(c, g.fl + 8, y - h * 0.82, t);
       if (L >= 4) flag(c, g.fr + d * 0.5, y - h - d * 0.2, '#b04ab0', t, 44);
+      if (L >= 5) stringLights(c, g, t);
       break;
     }
     case 'townhall': {
       const V = S.village;
-      g = house(c, Object.assign(base, { rh: w * 0.22, planks: V <= 2, stones: V >= 3, patches: V <= 1 ? 3 : 0, base: V >= 3, trim: V >= 5 ? '#ffd23a' : V >= 2 ? '#f4ecd8' : null }));
+      g = house(c, Object.assign(base, { rh: w * 0.22, planks: V <= 2, stones: V >= 3, frame: false, shingles: V >= 4, patches: V <= 1 ? 3 : 0, broken: V <= 1, base: V >= 3, trim: V >= 5 ? '#ffd23a' : V >= 2 ? '#f4ecd8' : null }));
       // windows rows
       const rows = V >= 4 ? 2 : 1;
       for (let r = 0; r < rows; r++) for (let i = 0; i < 4; i++) { if (i === 1 || i === 2) { if (r === 0) continue; } windowW(c, x - w * 0.4 + i * w * 0.22, y - h * (0.62 + r * 0.32), w * 0.12, h * 0.2, { lit, shutters: V >= 3 ? '#36557a' : null, box: V >= 2 && r === 0 }); }
@@ -3351,7 +3604,46 @@ function drawBuilding(c, B, L, t, scn) {
       break;
     }
   }
+  if (g && B.kind !== 'townhall') {
+    if (L >= 5) roofDormer(c, g, wall, roof, t);
+    if (stage === 'broken') brokenBits(c, B, g, x, y, w, h, t);
+    if (stage === 'pale') paleBits(c, g, x, y, w, h);
+    if (L >= 3) { const s2 = new Path2D(); s2.rect(x - w * 0.1, y - h * 1.9 - d, w * 0.75 + d, h * 1.0); g.sil.addPath(s2); }
+  }
+  if (g && B.kind === 'townhall' && S.village <= 1) brokenBits(c, B, g, x, y, w, h, t);
   return g ? g.sil : null;
+}
+// L3+: an extra section behind the main building
+function rearWing(c, B, L, x, y, w, h, d, wall, roof, lit) {
+  const ww = w * 0.55, wh = h * (1.25 + 0.08 * (L - 3)), wx = x + w * 0.22 + d * 0.45, wy = y - d * 0.62;
+  const g2 = house(c, { x: wx, y: wy, w: ww, h: wh, d: d * 0.7, wall: shade(wall, -0.06), roof: shade(roof, -0.08), rh: ww * 0.34, planks: L < 4, stones: L >= 4 && B.kind !== 'boatyard' && B.kind !== 'market', shingles: L >= 4, trim: L >= 5 ? '#ffd23a' : '#f4ecd8' });
+  windowW(c, wx - ww * 0.12, wy - wh * 0.92, ww * 0.24, wh * 0.2, { lit, frame: '#f2ead8' });
+  return g2;
+}
+// L5: a dormer window on the roof
+function roofDormer(c, g, wall, roof, t) {
+  const [px, py] = g.roofPt(0.45, 0.5), dw = 26, dh = 22;
+  c.fillStyle = wall; c.fillRect(px - dw / 2, py - dh, dw, dh); c.fillStyle = shade(wall, -0.25); c.fillRect(px + dw / 2, py - dh, 6, dh);
+  poly(c, [[px - dw / 2 - 4, py - dh], [px, py - dh - 14], [px + dw / 2 + 4, py - dh]], roof);
+  c.strokeStyle = '#ffd23a'; c.lineWidth = 2; c.beginPath(); c.moveTo(px - dw / 2 - 4, py - dh); c.lineTo(px, py - dh - 14); c.lineTo(px + dw / 2 + 4, py - dh); c.stroke();
+  windowW(c, px - 7, py - dh + 5, 14, 12, { lit: true, frame: '#fff' });
+}
+// L1 starter: boarded window, fallen planks, a crack
+function brokenBits(c, B, g, x, y, w, h, t) {
+  // planks nailed over a window
+  const bx = g.fr - w * 0.2, by = y - h * 0.62;
+  c.fillStyle = '#2a2018'; c.fillRect(bx - 12, by - 10, 24, 20);
+  c.save(); c.translate(bx, by); c.fillStyle = '#a8906a'; c.rotate(0.5); c.fillRect(-16, -3, 32, 6); c.rotate(-1); c.fillRect(-16, -3, 32, 6); c.restore();
+  // a plank leaning on the wall & loose boards
+  c.save(); c.translate(g.fl + 6, y); c.rotate(-0.25); c.fillStyle = '#8a7258'; c.fillRect(-4, -h * 0.75, 8, h * 0.75); c.restore();
+  c.fillStyle = '#7a6448'; c.save(); c.translate(x + w * 0.3, y + 6); c.rotate(0.12); c.fillRect(-18, -3, 36, 5); c.restore();
+  // crack
+  c.strokeStyle = 'rgba(30,20,12,.6)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x - w * 0.3, y - h * 0.95); c.lineTo(x - w * 0.26, y - h * 0.8); c.lineTo(x - w * 0.31, y - h * 0.7); c.lineTo(x - w * 0.27, y - h * 0.58); c.stroke();
+}
+// L1 new: freshly built, very plain — raw planks and an unpainted sign board
+function paleBits(c, g, x, y, w, h) {
+  c.fillStyle = 'rgba(255,255,255,.12)'; c.fillRect(g.fl, y - h, w, h);
+  c.strokeStyle = 'rgba(120,100,70,.35)'; c.lineWidth = 1; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(g.fl + w * (0.2 + i * 0.3), y - h); c.lineTo(g.fl + w * (0.2 + i * 0.3), y); c.stroke(); }
 }
 // Bolt's floating Automation Dock (Update 4)
 function drawAutoDock(c, B, L, t, scn, w, h, d) {
@@ -3365,7 +3657,11 @@ function drawAutoDock(c, B, L, t, scn, w, h, d) {
   c.fillStyle = '#6a4a2a'; c.fillRect(x - w / 2, top, w, 9); poly(c, [[x + w / 2, top], [x + w / 2 + d, top + dy], [x + w / 2 + d, top + dy + 9], [x + w / 2, top + 9]], '#5a3e22');
   c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1; for (let i = 1; i < 8; i++) { const xx = x - w / 2 + i * w / 8; c.beginPath(); c.moveTo(xx, top); c.lineTo(xx + d, top + dy); c.stroke(); }
   // shed
-  const g = house(c, { x: x - w * 0.16, y: top + dy * 0.4, w: w * 0.5, h: h * (0.95 + 0.08 * (L - 1)), d: d * 0.7, wall: L >= 2 ? '#7a8a9a' : '#8a8a86', roof: '#3a4a5a', stones: L >= 3, planks: L < 3, trim: L >= 5 ? '#ffd23a' : L >= 2 ? '#e8a83a' : null });
+  if (L >= 3) { // an extra platform section with cargo
+    const ex = x + w / 2 + d * 0.2, et = top + dy * 0.2; poly(c, [[ex - 10, et + 4], [ex + w * 0.36, et + 4], [ex + w * 0.36 + d * 0.6, et + 4 + dy * 0.6], [ex - 10 + d * 0.6, et + 4 + dy * 0.6]], '#8a6a44');
+    c.fillStyle = '#5a3e22'; c.fillRect(ex - 10, et + 4, w * 0.36 + 10, 7); c.fillStyle = '#34485a'; c.beginPath(); c.ellipse(ex + w * 0.17, y + 8 + bob, w * 0.18, 8, 0, 0, TAU); c.fill();
+    barrel(c, ex + 8, et + 2); barrel(c, ex + 26, et - 2); crate(c, ex + w * 0.28, et + 4, 18); }
+  const g = house(c, { x: x - w * 0.16, y: top + dy * 0.4, w: w * 0.5, h: h * (0.95 + 0.08 * (L - 1)), d: d * 0.7, wall: bldWall(B, L), roof: bldRoof(B, L), stones: L >= 4, planks: L < 4, shingles: L >= 4, trim: L >= 5 ? '#ffd23a' : L >= 2 ? '#e8a83a' : null });
   windowW(c, x - w * 0.28, top + dy * 0.4 - h * 0.7, w * 0.12, h * 0.26, { lit: true, frame: '#3a4a5a' });
   c.fillStyle = '#2a2e34'; c.fillRect(x - w * 0.1, top + dy * 0.4 - h * 0.6, w * 0.14, h * 0.6);
   // gear on the roof
@@ -3696,7 +3992,7 @@ Scenes.map = {
     { const [px, py] = P(VILLAGE_PIN.x, VILLAGE_PIN.y), bob = Math.sin(t * 3) * 2;
       c.fillStyle = 'rgba(0,0,0,.3)'; c.beginPath(); c.ellipse(px, py + 2, 9, 3, 0, 0, TAU); c.fill();
       c.fillStyle = '#ffd23a'; c.strokeStyle = '#5a3a00'; c.lineWidth = 2; c.beginPath(); c.moveTo(px, py + bob); c.bezierCurveTo(px - 16, py - 18 + bob, px - 14, py - 38 + bob, px, py - 38 + bob); c.bezierCurveTo(px + 14, py - 38 + bob, px + 16, py - 18 + bob, px, py + bob); c.fill(); c.stroke();
-      c.font = '14px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('🏠', px, py - 25 + bob); }
+      drawIcon(c, 'house', px, py - 25 + bob, 18); }
     // boss markers
     AREAS.forEach((a, i) => { const B = bossInArea(i); if (!B || st[i] !== 'open') return; bossMarker(c, ...P(a.x + a.rr * 0.42, a.y - a.rr * 0.35), ms, t + i, B); });
     SPECIAL_ISLES.forEach(I => { if (!this.rev['s_' + I.id]) return; bossMarker(c, ...P(I.x + I.rr * 0.5, I.y - I.rr * 0.45), ms, t + 3, BOSSES[I.boss]); });
@@ -3846,13 +4142,13 @@ Scenes.map = {
 };
 function label(c, txt, x, y, size, col) {
   c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 4; c.strokeStyle = 'rgba(0,0,0,.65)';
-  c.font = `bold ${size}px Fredoka, sans-serif`; c.strokeText(txt, x, y); c.fillStyle = col; c.fillText(txt, x, y);
+  c.font = `bold ${size}px Fredoka, sans-serif`; c.fillStyle = col; textIcons(c, txt, x, y, size);
 }
 function selRing(c, x, y, r, t) { c.strokeStyle = '#fff'; c.lineWidth = 2; c.setLineDash([6, 4]); c.lineDashOffset = -t * 20; c.beginPath(); c.arc(x, y, r, 0, TAU); c.stroke(); c.setLineDash([]); }
 function bossMarker(c, bx, by, ms, t, B) {
   const beaten = bossBeaten(B.id), y = by + Math.sin(t * 3) * 2, r = clamp(12 * ms + 4, 10, 22);
   c.fillStyle = beaten ? 'rgba(95,224,122,.85)' : 'rgba(30,10,20,.85)'; c.beginPath(); c.arc(bx, y, r, 0, TAU); c.fill(); c.strokeStyle = beaten ? '#fff' : '#ff5a7a'; c.lineWidth = 2; c.stroke();
-  c.font = `${r * 1.1}px sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(beaten ? '✔' : B.kraken ? '🐙' : '☠️', bx, y + 1);
+  drawIcon(c, beaten ? 'check' : B.kraken ? 'octopus' : 'skull', bx, y, r * 1.5);
 }
 function drawRegion(c, a, i, P, ms, t, dim) {
   const [cx, cy] = P(a.x, a.y);
@@ -4513,7 +4809,7 @@ function drawLagoon(c, t) {
   const g = c.createRadialGradient(x, y, 10, x, y, r); g.addColorStop(0, 'rgba(160,255,240,.45)'); g.addColorStop(0.7, 'rgba(90,240,220,.25)'); g.addColorStop(1, 'rgba(90,240,220,0)');
   c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill();
   for (let i = 0; i < 3; i++) { const u = ((t * 0.3 + i / 3) % 1); c.strokeStyle = `rgba(255,255,255,${0.3 * (1 - u)})`; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r * u, 0, TAU); c.stroke(); }
-  c.font = 'bold 18px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.65)'; c.fillText('✨ Frenzy Lagoon ✨', x, y - r - 8);
+  c.font = 'bold 18px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.65)'; textIcons(c, '✨ Frenzy Lagoon ✨', x, y - r - 8, 18, 'fill');
 }
 function drawHazard(c, h, t) {
   if (h.k === 'worms') {
@@ -4594,8 +4890,8 @@ function drawBossLair(c, B, t) {
     const sp = Object.assign({ name: B.name, agile: 1, rare: true, tier: B.req }, B.look);
     drawShadow(c, x + Math.cos(t * 0.5) * 60, y + Math.sin(t * 0.5) * 40, t * 0.5 + Math.PI / 2, 230, t, 0.55, 'rgba(0,0,0,1)');
     c.font = 'bold 22px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,240,200,.9)'; c.strokeStyle = 'rgba(0,0,0,.6)'; c.lineWidth = 4;
-    c.strokeText('☠ ' + B.name, x, y - 210); c.fillText('☠ ' + B.name, x, y - 210);
-  } else { c.font = 'bold 20px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(200,255,220,.8)'; c.fillText('✔ ' + B.name + ' defeated', x, y - 120); }
+    textIcons(c, '☠ ' + B.name, x, y - 210, 22);
+  } else { c.font = 'bold 20px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(200,255,220,.8)'; textIcons(c, '✔ ' + B.name + ' defeated', x, y - 120, 20, 'fill'); }
 }
 
 function drawGlint(c, x, y, t, hi) {
@@ -4726,7 +5022,7 @@ function drawIsleDeco(c, d, t) {
     for (let i = 0; i < 5; i++) { const a = i / 5 * TAU + 0.6, px = x + Math.cos(a) * r * 0.62, py = y + Math.sin(a) * r * 0.4; c.fillStyle = '#c8d0e8'; c.fillRect(px - 4, py - 26, 8, 26); c.fillStyle = '#e8eeff'; c.beginPath(); c.arc(px, py - 28, 7, 0, TAU); c.fill(); }
   } else if (d.theme === 'phantom') {
     for (let i = 0; i < 3; i++) { const px = x + (i - 1) * 60, py = y - 6 + (i % 2) * 14; c.strokeStyle = 'rgba(200,255,230,.8)'; c.lineWidth = 4; c.beginPath(); c.moveTo(px, py); c.lineTo(px + 6, py - 70); c.stroke(); c.fillStyle = `rgba(200,255,230,${0.35 + 0.15 * Math.sin(t * 2 + i)})`; c.beginPath(); c.moveTo(px + 6, py - 66); c.quadraticCurveTo(px + 36, py - 50 + Math.sin(t * 2 + i) * 4, px + 8, py - 30); c.fill(); }
-    c.fillStyle = 'rgba(120,255,210,.5)'; c.font = '26px sans-serif'; c.textAlign = 'center'; c.fillText('☠', x, y + 26);
+    c.globalAlpha = 0.6; drawIcon(c, 'skull', x, y + 18, 34); c.globalAlpha = 1;
   } else if (d.theme === 'stormeye') {
     c.fillStyle = '#6a7a98'; c.beginPath(); c.moveTo(x - 50, y + 10); c.lineTo(x - 10, y - 90); c.lineTo(x + 30, y - 40); c.lineTo(x + 60, y + 10); c.fill(); c.fillStyle = '#8a9ab8'; c.beginPath(); c.moveTo(x - 10, y - 90); c.lineTo(x + 6, y - 50); c.lineTo(x - 24, y - 30); c.fill();
     c.strokeStyle = '#ffe86a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 10, y - 90); c.lineTo(x - 10, y - 120); c.stroke(); if (Math.sin(t * 2.3) > 0.85) { c.strokeStyle = 'rgba(255,240,140,.95)'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 10, y - 400); c.lineTo(x - 30, y - 300); c.lineTo(x, y - 260); c.lineTo(x - 18, y - 160); c.lineTo(x - 10, y - 120); c.stroke(); }
@@ -4842,7 +5138,7 @@ function drawBar(c, F, r, t, opts = {}) {
   // warning label
   const w = F.ev.find(e => e.phase === 'warn' && e.k !== 'slam');
   if (w) { const label = { dash: 'DASH!', mud: 'MUD!', ink: 'INK!', tug: w.dir > 0 ? 'CURRENT →' : '← CURRENT', freeze: 'FREEZE! MOVE!', decoy: 'DECOY!', fire: 'FIRE! MOVE!', fade: 'FADING...', teleport: 'TELEPORT!' }[w.k]; c.font = 'bold 15px Fredoka, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#ffe9a8'; c.strokeStyle = 'rgba(0,0,0,.7)'; c.lineWidth = 4; c.strokeText(label, W / 2, r.y - 12); c.fillText(label, W / 2, r.y - 12); }
-  if (inv) { c.font = 'bold 12px Fredoka, sans-serif'; c.fillStyle = '#ffd23a'; c.textAlign = 'left'; c.fillText('🛡 ' + Math.max(0, F.gear.inv - F.time).toFixed(1) + 's', r.x + 4, r.y - 10); }
+  if (inv) { c.font = 'bold 12px Fredoka, sans-serif'; c.fillStyle = '#ffd23a'; c.textAlign = 'left'; textIcons(c, '🛡 ' + Math.max(0, F.gear.inv - F.time).toFixed(1) + 's', r.x + 4, r.y - 10, 12, 'fill'); }
 }
 function drawFishingUI(sc) {
   const fg = sc.fight, F = fg.F, r = sc.barRect(), t = sc.t;
@@ -4852,7 +5148,7 @@ function drawFishingUI(sc) {
   ctx.fillStyle = pg; ctx.strokeStyle = '#4a82b4'; ctx.lineWidth = 2; rrect(ctx, px, py, pw, ph, 18); ctx.fill(); ctx.stroke();
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.font = 'bold 22px Fredoka, sans-serif'; ctx.fillStyle = fg.treasure ? '#ffe08a' : '#fff';
-  ctx.fillText(fg.treasure ? '✨ Something heavy and shiny!' : '??? on the line!', W / 2, py + 26);
+  textIcons(ctx, fg.treasure ? '✨ Something heavy and shiny!' : '??? on the line!', W / 2, py + 26, 14, 'fill');
   ctx.font = '14px Fredoka, sans-serif'; ctx.fillStyle = '#9fc4e0';
   const how = SET.follow ? (isTouch ? 'Drag to move the box' : 'Move the mouse to move the box') : (isTouch ? 'Hold REEL to push right · let go to drift left' : 'Hold SPACE (or click) to push right · let go to drift left');
   const sz = fg.treasure ? 'Keep the box on it!' : 'Hooked ' + (fg.s.t >= 0.85 ? 'a huge shadow' : fg.s.t >= 0.6 ? 'a big shadow' : fg.s.t >= 0.35 ? 'a medium shadow' : 'a small shadow') + (fg.bait ? ' · 🪱 Lucky Bait' : '');
@@ -4877,7 +5173,7 @@ function drawFishingUI(sc) {
   ctx.fillStyle = pc; ctx.shadowColor = pc; ctx.shadowBlur = F.over ? 12 : 0; rrect(ctx, r.x, py2, Math.max(16, r.w * F.prog), 16, 8); ctx.fill(); ctx.shadowBlur = 0;
   ctx.font = 'bold 12px Fredoka, sans-serif'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
   ctx.fillText(fg.swMsg ? 'SECOND WIND!' : fg.chestMsg ? 'TREASURE CHEST GRABBED!' : F.over ? 'REELING IN!' : (F.prog < 0.25 ? 'IT’S ESCAPING!' : 'Stay on it!'), W / 2, py2 + 8);
-  ctx.fillStyle = '#cfe3f5'; ctx.font = '12px Fredoka, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(F.chestGot ? '📦 Chest grabbed' : 'Catch', r.x, py2 + 30); ctx.textAlign = 'right'; ctx.fillText(Math.round(F.prog * 100) + '%', r.x + r.w, py2 + 30);
+  ctx.fillStyle = '#cfe3f5'; ctx.font = '12px Fredoka, sans-serif'; ctx.textAlign = 'left'; textIcons(ctx, F.chestGot ? '📦 Chest grabbed' : 'Catch', r.x, py2 + 30, 12, 'fill'); ctx.textAlign = 'right'; ctx.fillText(Math.round(F.prog * 100) + '%', r.x + r.w, py2 + 30);
 }
 
 // ================================================================
@@ -5107,7 +5403,7 @@ Object.assign(Scenes.sea, {
       const cx = W / 2, cy = H / 2, a = Math.atan2(p.y - cy, p.x - cx), ex = clamp(p.x, 36, W - 36), ey = clamp(p.y, 96, H - 96);
       ctx.save(); ctx.translate(ex, ey); ctx.fillStyle = 'rgba(10,20,40,.7)'; ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke();
       ctx.rotate(a); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(15, -6); ctx.lineTo(15, 6); ctx.fill(); ctx.rotate(-a);
-      ctx.font = '15px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(ic, 0, 1); ctx.restore();
+      drawIcon(ctx, EMOJI_ICON[ic] || ic, 0, 0, 22); ctx.restore();
     });
   },
   autoHUD(t) {
@@ -5121,7 +5417,7 @@ Object.assign(Scenes.sea, {
       const x = x0 + i * (s + 6) + s / 2, y = y0 + s / 2;
       ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y, s / 2 - 2, 0, TAU); ctx.stroke();
       ctx.strokeStyle = '#7affd0'; ctx.beginPath(); ctx.arc(x, y, s / 2 - 2, -Math.PI / 2, -Math.PI / 2 + TAU * clamp(f, 0, 1)); ctx.stroke();
-      ctx.font = '17px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff'; ctx.fillText(ic, x, y + 1);
+      drawIcon(ctx, EMOJI_ICON[ic] || ic, x, y, 24); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = 'bold 10px Fredoka, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.8)'; ctx.fillText(lb, x, y + s / 2 + 8);
     });
   }
@@ -5365,13 +5661,13 @@ function uiBlocking() { return !!(DLG || PANEL || fade.dir); }
 // ---------------- toasts / banners ----------------
 function toast(msg, kind) {
   const el = document.createElement('div'); el.className = 'toast ' + (kind || '');
-  el.innerHTML = msg; $('#toasts').appendChild(el);
+  el.innerHTML = iconize(msg); $('#toasts').appendChild(el); paintIcons(el);
   setTimeout(() => el.remove(), 3400);
   while ($('#toasts').children.length > 4) $('#toasts').firstChild.remove();
 }
 function bigBanner(title, sub, col) {
   const b = $('#banner'); b.classList.remove('hidden'); b.classList.remove('show'); void b.offsetWidth;
-  b.innerHTML = `<div class="btitle" style="color:${col || '#fff'}">${esc(title)}</div><div class="bsub">${sub || ''}</div>`;
+  b.innerHTML = iconize(`<div class="btitle" style="color:${col || '#fff'}">${esc(title)}</div><div class="bsub">${sub || ''}</div>`); paintIcons(b);
   b.classList.add('show'); clearTimeout(b._t); b._t = setTimeout(() => b.classList.add('hidden'), 3800);
 }
 function levelUpFx(L) {
@@ -5477,13 +5773,14 @@ function openPanel(id, title, render, opts = {}) { PANEL = Object.assign({ id, t
 function renderPanel() {
   if (!PANEL) return;
   const m = $('#modal'), body = m.querySelector('.panel-body'), keep = body ? body.scrollTop : 0;
-  m.innerHTML = `<div class="panel ${PANEL.cls || ''}"><div class="panel-head"><span class="ptitle">${PANEL.title}</span>${PANEL.noClose ? '' : '<button class="btn ghost iconbtn small" data-act="close" title="Close (Esc)">✕</button>'}</div><div class="panel-body">${PANEL.render()}</div></div>`;
+  m.innerHTML = iconize(`<div class="panel ${PANEL.cls || ''}"><div class="panel-head"><span class="ptitle">${PANEL.title}</span>${PANEL.noClose ? '' : '<button class="btn ghost iconbtn small" data-act="close" title="Close (Esc)">✕</button>'}</div><div class="panel-body">${PANEL.render()}</div></div>`);
   const nb = m.querySelector('.panel-body'); if (nb) nb.scrollTop = keep;
   drawIcons(m);
   PANEL.after && PANEL.after();
 }
 function closePanel() { if (!PANEL) return; const cb = PANEL.onClose; PANEL = null; $('#modal').classList.add('hidden'); $('#modal').innerHTML = ''; hideTip(); cb && cb(); }
 function drawIcons(root) {
+  paintIcons(root);
   root.querySelectorAll('canvas[data-sp]').forEach(cv => {
     const c = cv.getContext('2d'), sp = SPECIES_BY_ID[cv.dataset.sp], w = cv.width, h = cv.height;
     c.clearRect(0, 0, w, h);
@@ -5498,7 +5795,7 @@ function drawIcons(root) {
 function drawPortraits(root) { (root && root.querySelectorAll ? root : document).querySelectorAll('canvas[data-look]').forEach(cv => portrait(cv.getContext('2d'), cv.width, LOOKS[cv.dataset.look])); }
 
 // ---------------- tooltip ----------------
-function showTip(html, x, y) { const t = $('#tooltip'); t.innerHTML = html; t.classList.remove('hidden'); const r = t.getBoundingClientRect(); t.style.left = clamp(x + 16, 6, W - r.width - 6) + 'px'; t.style.top = clamp(y + 12, 6, H - r.height - 6) + 'px'; }
+function showTip(html, x, y) { const t = $('#tooltip'); t.innerHTML = iconize(html); paintIcons(t); t.classList.remove('hidden'); const r = t.getBoundingClientRect(); t.style.left = clamp(x + 16, 6, W - r.width - 6) + 'px'; t.style.top = clamp(y + 12, 6, H - r.height - 6) + 'px'; }
 function hideTip() { $('#tooltip').classList.add('hidden'); }
 document.addEventListener('mouseover', e => { const el = e.target.closest('[data-fid]'); if (!el || !S) return; const f = S.basket.find(x => x.id == el.dataset.fid) || (CATCH && CATCH.fish.id == el.dataset.fid ? CATCH.fish : null); if (f) showTip(fishTipHTML(f), e.clientX, e.clientY); });
 document.addEventListener('mousemove', e => { const el = e.target.closest('[data-fid]'); if (!el) { hideTip(); return; } const t = $('#tooltip'); if (!t.classList.contains('hidden')) showTip(t.innerHTML, e.clientX, e.clientY); });
@@ -5602,12 +5899,12 @@ function startGame(state, fresh) {
   rebuildCustomParts();
   closePanel();
   // milestones already reached before this update are awarded quietly
-  if (!S.prestige.init) { S.prestige.init = true; const before = S.prestige.pp; checkPrestige(true); S.prestige.pp = Math.max(S.prestige.pp, before); if (S.prestige.pp > 0 && !fresh) S.flags.ppIntro = S.prestige.pp; }
+  if (!S.prestige.init) { S.prestige.init = true; checkPrestige(true); }
   transition(() => {
     const isleOk = S.loc.isle ? isleAvailable(S.loc.isle) : true;
     if (S.loc.type === 'sea' && S.permits[S.loc.area] && isleOk) go('sea', { area: S.loc.area, isle: S.loc.isle }); else go('village');
     if (!fresh && S.flags.u4intro === false) { S.flags.u4intro = true; setTimeout(() => bigBanner('Update 4: Wild Isles & Clockwork', 'Wild isles, custom forging, special isles, automation, drones, a new skill tree and Prestige!', '#7affea'), 600); }
-    if (S.flags.ppIntro) { const n = S.flags.ppIntro; S.flags.ppIntro = 0; setTimeout(() => toast(`🏆 Your past achievements earned you <b>${n} Prestige</b>! Spend it with the 🏆 button.`, 'quest'), 3200); }
+    if (S.flags.ppFix) { S.flags.ppFix = 0; setTimeout(() => toast(`🏆 Prestige now pays out when you defeat the Kraken and start a New Voyage. Your perks were reset — you have <b>${S.prestige.pending} Prestige</b> waiting for your next voyage.`, 'quest'), 3200); }
     if (fresh) setTimeout(() => bigBanner('Fishing Rise', 'You wake up on a beach with nothing but the clothes on your back...', '#ffe08a'), 400);
     save(true);
   });
@@ -5817,7 +6114,7 @@ function updateHUD() {
   $('#basketCount').textContent = n ? n : '';
   $('#btnSkills').classList.toggle('hidden', S.level < 2);
   $('#skillCount').textContent = S.sp > 0 ? S.sp : '';
-  $('#btnPrestige').classList.toggle('hidden', !(S.prestige.total > 0 || S.level >= 5));
+  $('#btnPrestige').classList.toggle('hidden', !(S.prestige.total > 0 || S.prestige.pending > 0 || S.level >= 5));
   $('#ppCount').textContent = ppAffordable() ? S.prestige.pp : '';
 }
 function updateWeight() {
@@ -6064,7 +6361,7 @@ function bossVictory(id) {
      <p class="big-p">${B.kraken ? (first ? 'From a broken rod on a poor beach to the slayer of the Kraken. The fish are returning to every sea!' : 'The Kraken retreats once more.') : first ? `${esc(B.name)} sinks back into the deep. ${esc(B.isle ? ISLE_BY_ID[B.isle].name : AREAS[B.area].sea)} is safe!` : `${esc(B.name)} retreats.`}</p>
      <div class="rewards">${B.kraken ? `<div>🏆 <b style="color:#ff4f7f">Kraken’s Tentacle</b> trophy</div>` : ''}${coins ? `<div>${coinHTML(coins)}</div>` : ''}<div class="xpgain">+${xp} XP</div>${tre.map(tr => { const T = TREASURE_BY_ID[tr.tid]; return `<div style="color:${RARITIES[T.r].c}">📦 ${esc(T.n)}</div>`; }).join('')}${tal ? `<div style="color:${RARITIES[tal.r].c}">🧿 Talisman: ${esc(tal.n)}</div>` : ''}${mat ? `<div style="color:${mat.M.col}">💎 ${mat.n} ${esc(mat.M.n)}</div>` : ''}</div>
      ${B.kraken ? `<table class="tt wide"><tr><td>Attempts</td><td>${S.krakenTries}</td></tr><tr><td>Level</td><td>${S.level}</td></tr><tr><td>Fish caught</td><td>${S.stats.caught}</td></tr><tr><td>Species discovered</td><td>${dexCount()}/${regSpecies().length}</td></tr><tr><td>Talismans</td><td>${S.talismans.length}/${TALISMANS.length}</td></tr><tr><td>Time played</td><td>${fmtTime(S.play)}</td></tr></table>` : ''}
-     <button class="btn gold big" data-act="victorydone">Continue</button></div>`, { cls: 'narrow', noClose: true });
+     ${B.kraken ? `<div class="hint">🏆 You can now <b>Prestige</b>: start a New Voyage and cash in <b>${S.prestige.pending + 25 * S.prestige.voyage} Prestige</b> for permanent perks.</div><div class="row gap center"><button class="btn gold big" data-act="victorydone">Keep playing</button><button class="btn red big" data-act="prestigenow">🏆 Prestige</button></div>` : '<button class="btn gold big" data-act="victorydone">Continue</button>'}</div>`, { cls: 'narrow', noClose: true });
 }
 function bossDefeatScreen(id) {
   openPanel('kdefeat', `${BOSSES[id].name} escaped...`, () => `<div class="center"><p class="big-p">Your line snapped and ${esc(BOSSES[id].name)} slipped back into the deep.</p><p class="muted">Tip: better rods move your box faster, better spinners reel faster and make the box bigger, better hooks slow line damage. Talismans, skills and Stun Sparks help too!</p><button class="btn gold big" data-act="victorydone">Back to the boat</button></div>`, { cls: 'narrow', noClose: true });
@@ -6089,7 +6386,7 @@ function openMapCard(i, pin) {
        <button class="btn green" data-act="travel" data-area="${i}" data-mode="fish">🎣 ${here ? 'Back to fishing' : 'Fish ' + esc(a.sea)}</button></div>
        ${eqTier('rod') + 1 < a.tier ? `<div class="warnc small">Your rod (T${+eqTier('rod').toFixed(1)}) is weak for tier ${a.tier} fish. Many will escape!</div>` : ''}`;
   }
-  el.innerHTML = `<div class="mc-head"><span class="mc-name">${esc(i === 0 && pin ? 'Driftwood Isle (village)' : a.sea)}</span><span class="tierchip" style="background:${TIER_COL[a.tier]}">Tier ${a.tier}</span><button class="btn ghost iconbtn small" data-act="mapclose">✕</button></div>${body}`;
+  el.innerHTML = iconize(`<div class="mc-head"><span class="mc-name">${esc(i === 0 && pin ? 'Driftwood Isle (village)' : a.sea)}</span><span class="tierchip" style="background:${TIER_COL[a.tier]}">Tier ${a.tier}</span><button class="btn ghost iconbtn small" data-act="mapclose">✕</button></div>${body}`);
   drawIcons(el);
   el.classList.remove('hidden'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   const qt = questTarget();
@@ -6112,7 +6409,7 @@ function updateHotbar(hide) {
     if (S.modules.motor) btns.push(`<button class="hbtn boost" id="boostBtn"><span class="hk">⇧</span>🚀<span class="hn">Boost</span></button>`);
     if (S.baitCasts > 0) btns.push(`<span class="hinfo">🪱 ${S.baitCasts} lucky casts</span>`);
   }
-  hb.innerHTML = btns.join('');
+  hb.innerHTML = iconize(btns.join('')); paintIcons(hb);
   hb.classList.toggle('hidden', !btns.length);
   hb.classList.toggle('fight', fighting);
   const side = isTouch || H < 560;
@@ -6450,7 +6747,7 @@ function matChips(mats) {
 function skillTipHTML(sk) {
   const r = S.skills[sk.id] || 0, cap = skillCap(sk), open = skillRowOpen(sk);
   const nr = nextCapRegion();
-  return `<div class="tt-name">${sk.icon} ${esc(sk.n)}</div><div class="tt-sub">${esc(sk.cat)} · ${esc(SKILL_TABS.find(T => T.id === sk.cat).cols[sk.col])} · Rank ${r}/${sk.max}</div>
+  return `<div class="tt-name">${iconHTML(sk.icon, 'big')} ${esc(sk.n)}</div><div class="tt-sub">${esc(sk.cat)} · ${esc(SKILL_TABS.find(T => T.id === sk.cat).cols[sk.col])} · Rank ${r}/${sk.max}</div>
     ${r ? `<div class="sk-now">Now: <b>${esc(sk.d(r))}</b></div>` : ''}
     ${r < sk.max ? `<div class="sk-next">${r ? 'Next' : 'Rank 1'}: ${esc(sk.d(r + 1))}</div>` : '<div class="up">Mastered!</div>'}
     ${!open ? `<div class="warnc small">🔒 Spend ${SKILL_ROW_PTS[sk.row]} points in ${esc(sk.cat)} to unlock this row (${tabPoints(sk.cat)}/${SKILL_ROW_PTS[sk.row]}).</div>` : r >= cap && r < sk.max ? `<div class="warnc small">🔒 Max rank ${cap} for now${nr ? ` — reach ${esc(nr.sea)} to raise it` : ''}.</div>` : ''}`;
@@ -6459,14 +6756,14 @@ function openSkills() {
   openPanel('skills', '⭐ Skills', () => {
     const tab = PANEL.tab || 'Fishing', T = SKILL_TABS.find(x => x.id === tab) || SKILL_TABS[0];
     const sel = SKILL_BY_ID[PANEL.sel] || null;
-    const tabs = SKILL_TABS.map(x => `<button class="tab sktab ${x.id === tab ? 'on' : ''}" data-act="tab" data-tab="${x.id}" style="--tc:${x.col}">${x.icon} ${x.id} <span class="small">(${tabPoints(x.id)})</span></button>`).join('');
+    const tabs = SKILL_TABS.map(x => `<button class="tab sktab ${x.id === tab ? 'on' : ''}" data-act="tab" data-tab="${x.id}" style="--tc:${x.col}">${iconHTML(x.icon)} ${x.id} <span class="small">(${tabPoints(x.id)})</span></button>`).join('');
     const capNow = 1 + Math.ceil(regionsReached() / 2), nr = nextCapRegion();
     const cols = T.cols.map((cn, ci) => {
       const cells = [0, 1, 2].map(row => {
         const sk = SKILLS.find(s => s.cat === T.id && s.col === ci && s.row === row); if (!sk) return '<div class="skcell empty"></div>';
         const r = S.skills[sk.id] || 0, open = skillRowOpen(sk), cap = skillCap(sk), can = open && r < cap && S.sp > 0;
         return `<div class="skcell ${open ? '' : 'locked'} ${r ? 'has' : ''} ${r >= sk.max ? 'max' : ''} ${can ? 'can' : ''} ${sel === sk ? 'sel' : ''}" data-act="sksel" data-id="${sk.id}" data-tip-skill="${sk.id}" style="--tc:${T.col}">
-          <div class="skicon">${open ? sk.icon : '🔒'}</div><div class="skrank">${r}/${sk.max}</div>${can ? '<div class="skplus">+</div>' : ''}</div>`;
+          <div class="skicon">${iconHTML(open ? sk.icon : 'lock', 'sk')}</div><div class="skrank">${r}/${sk.max}</div>${can ? '<div class="skplus">+</div>' : ''}</div>`;
       }).join('<div class="sklink"></div>');
       return `<div class="skcol"><div class="skcolname">${esc(cn)}</div>${cells}</div>`;
     }).join('');
@@ -6537,7 +6834,7 @@ function openAutoDock() {
     const BL = merchantLv('bolt'); let lockedShown = false;
     const rows = AUTO.map(A => {
       const L = autoLv(A.id), nx = L + 1;
-      if (!L && BL < A.bl) { if (lockedShown) return ''; lockedShown = true; return `<div class="partrow locked"><div class="autoicon">🔒</div><div class="pr-main"><div class="pr-name">${esc(A.n)}</div><div class="pr-stat">${esc(A.d)}</div></div><span class="badge lock">Bolt Lv ${A.bl}</span></div>`; }
+      if (!L && BL < A.bl) { if (lockedShown) return ''; lockedShown = true; return `<div class="partrow locked"><div class="autoicon">${iconHTML('lock')}</div><div class="pr-main"><div class="pr-name">${esc(A.n)}</div><div class="pr-stat">${esc(A.d)}</div></div><span class="badge lock">Bolt Lv ${A.bl}</span></div>`; }
       const set = A.set ? FISH_SETS[A.set] : null;
       const setLine = set ? `<div class="pr-stat" style="color:${set.col}">🐟 Attracts ${esc(set.n)}: ${setFound(A.set)}/${speciesInSet(A.set).length} discovered</div>` : '';
       let act = '';
@@ -6546,7 +6843,7 @@ function openAutoDock() {
         const c = autoCost(A.id, nx), lvOk = nx <= BL, ok = lvOk && S.money >= c.coins && hasRes(c.res) && Object.keys(c.mats).every(k => matCount(k) >= c.mats[k]);
         act = `<div class="autobuy">${costLine(c.coins, c.res, matChips(c.mats) + (lvOk ? '' : reqTag(false, 'Bolt Lv ' + nx)))}<button class="btn gold small" data-act="buyauto" data-id="${A.id}" ${ok ? '' : 'disabled'}>${L ? '⬆ Upgrade to Lv ' + nx : '🔧 Install'}</button></div>`;
       }
-      return `<div class="partrow auto ${L ? 'is-eq' : ''}"><div class="autoicon">${A.icon}</div><div class="pr-main"><div class="pr-name">${esc(A.n)} ${stars(L, 5)}</div><div class="pr-stat">${esc(A.d)}</div>
+      return `<div class="partrow auto ${L ? 'is-eq' : ''}"><div class="autoicon">${iconHTML(A.icon)}</div><div class="pr-main"><div class="pr-name">${esc(A.n)} ${stars(L, 5)}</div><div class="pr-stat">${esc(A.d)}</div>
         ${L ? `<div class="pr-stat up">Now: ${esc(A.stat(L))}</div>` : ''}${L < 5 ? `<div class="pr-stat">${L ? 'Next' : 'Lv 1'}: ${esc(A.stat(nx))}</div>` : ''}${setLine}</div>${act}</div>`;
     }).join('');
     return shopHead('bolt') + `<div class="hint">“EFFICIENCY.” Automation runs by itself while you sail your expeditions. Upgrades go from slow to <b>really quick</b>. Devices need rare materials from the wild isles.${autoLv('buoy') ? ' Drop buoys with <b>4</b>.' : ''}</div><div class="partlist">${rows}</div>`;
@@ -6556,7 +6853,7 @@ function openAutoDock() {
 // ---------------- Drones (Fizz) ----------------
 function dronesHTML() {
   const FL = merchantLv('fizz');
-  if (FL < 3) return `<div class="partrow locked"><div class="autoicon">🛸</div><div class="pr-main"><div class="pr-name">🔒 Scout Drones</div><div class="pr-stat">Drones that fly out and find treasure for you.</div></div><span class="badge lock">Fizz Lv 3</span></div>`;
+  if (FL < 3) return `<div class="partrow locked"><div class="autoicon">${iconHTML('drone')}</div><div class="pr-main"><div class="pr-name">🔒 Scout Drones</div><div class="pr-stat">Drones that fly out and find treasure for you.</div></div><span class="badge lock">Fizz Lv 3</span></div>`;
   const bay = droneLv('bay');
   return `<div class="hint">Drones fly out from your boat to scout for <b>treasure</b>, <b>talismans</b> and <b>wrecks</b>. More drones, faster rotors and better scanners find treasure more quickly.</div>` + DRONE_UPG.map(U => {
     const L = droneLv(U.id), nx = L + 1, needBay = U.id !== 'bay' && !bay;
@@ -6565,7 +6862,7 @@ function dronesHTML() {
     else if (needBay) act = '<span class="badge lock">Needs a Drone Bay</span>';
     else { const cost = Math.round(U.cost[nx - 1] * costMul()), fOk = FL >= U.fl[nx - 1], pOk = S.level >= U.pl[nx - 1], ok = fOk && pOk && S.money >= cost;
       act = `<div class="autobuy">${costLine(cost, null, (fOk ? '' : reqTag(false, 'Fizz Lv ' + U.fl[nx - 1])) + (pOk ? '' : reqTag(false, 'Player Lv ' + U.pl[nx - 1])))}<button class="btn gold small" data-act="buydrone" data-id="${U.id}" ${ok ? '' : 'disabled'}>${L ? '⬆ Lv ' + nx : 'Build'}</button></div>`; }
-    return `<div class="partrow auto ${L ? 'is-eq' : ''}"><div class="autoicon">${U.icon}</div><div class="pr-main"><div class="pr-name">${esc(U.n)} ${stars(L, U.max)}</div><div class="pr-stat">${esc(U.d)}</div>${L ? `<div class="pr-stat up">Now: ${esc(U.stat(L))}${U.id === 'bay' && mods().droneN ? ` (+${mods().droneN} from Prestige)` : ''}</div>` : ''}${L < U.max ? `<div class="pr-stat">Next: ${esc(U.stat(nx))}</div>` : ''}</div>${act}</div>`;
+    return `<div class="partrow auto ${L ? 'is-eq' : ''}"><div class="autoicon">${iconHTML(U.icon)}</div><div class="pr-main"><div class="pr-name">${esc(U.n)} ${stars(L, U.max)}</div><div class="pr-stat">${esc(U.d)}</div>${L ? `<div class="pr-stat up">Now: ${esc(U.stat(L))}${U.id === 'bay' && mods().droneN ? ` (+${mods().droneN} from Prestige)` : ''}</div>` : ''}${L < U.max ? `<div class="pr-stat">Next: ${esc(U.stat(nx))}</div>` : ''}</div>${act}</div>`;
   }).join('');
 }
 
@@ -6573,38 +6870,38 @@ function dronesHTML() {
 function ppAffordable() { return PERKS.some(P => perkLv(P.id) < P.max && S.prestige.pp >= perkCost(P, perkLv(P.id))); }
 function openPrestige() {
   openPanel('prestige', '🏆 Prestige', () => {
-    const P = S.prestige, tab = PANEL.tab || 'perks';
+    const P = S.prestige, tab = PANEL.tab || (P.pp > 0 ? 'perks' : 'miles');
     const done = MILESTONES.filter(m => P.earned[m.id]).length;
-    const tabs = [['perks', '✨ Perks'], ['miles', `🏅 Milestones (${done}/${MILESTONES.length})`], ['voyage', '⛵ New Voyage']].map(([k, n]) => `<button class="tab ${k === tab ? 'on' : ''}" data-act="tab" data-tab="${k}">${n}</button>`).join('');
+    const tabs = [['miles', `🏅 This voyage (${done}/${MILESTONES.length})`], ['perks', '✨ Perks'], ['voyage', '⛵ New Voyage']].map(([k, n]) => `<button class="tab ${k === tab ? 'on' : ''}" data-act="tab" data-tab="${k}">${n}</button>`).join('');
     let body = '';
     if (tab === 'perks') {
-      body = `<div class="perkgrid">${PERKS.map(Pk => { const L = perkLv(Pk.id), cost = perkCost(Pk, L), max = L >= Pk.max, ok = !max && P.pp >= cost;
-        return `<div class="perk ${L ? 'has' : ''} ${max ? 'max' : ''}"><div class="pk-top"><span class="pk-icon">${Pk.icon}</span><div><div class="pk-name">${esc(Pk.n)}</div><div class="pk-lv">Lv ${L}/${Pk.max}</div></div></div>
+      body = `<div class="hint">Perks are permanent buffs bought with banked Prestige. ${P.pp ? '' : 'You have no banked Prestige yet — defeat the Kraken and start a New Voyage to cash in what you earn.'}</div><div class="perkgrid">${PERKS.map(Pk => { const L = perkLv(Pk.id), cost = perkCost(Pk, L), max = L >= Pk.max, ok = !max && P.pp >= cost;
+        return `<div class="perk ${L ? 'has' : ''} ${max ? 'max' : ''}"><div class="pk-top"><span class="pk-icon">${iconHTML(Pk.icon)}</span><div><div class="pk-name">${esc(Pk.n)}</div><div class="pk-lv">Lv ${L}/${Pk.max}</div></div></div>
           <div class="pk-bar"><i style="width:${L / Pk.max * 100}%"></i></div>
           <div class="pk-d">${L ? esc(Pk.d(L)) : '<span class="muted">' + esc(Pk.d(1)) + '</span>'}</div>${!max && L ? `<div class="pk-next small">Next: ${esc(Pk.d(L + 1))}</div>` : ''}
           ${max ? '<span class="badge eq">MAX</span>' : `<button class="btn ${ok ? 'gold' : ''} small" data-act="buyperk" data-id="${Pk.id}" ${ok ? '' : 'disabled'}>🏆 ${cost}</button>`}</div>`; }).join('')}</div>`;
     } else if (tab === 'miles') {
       const cats = [...new Set(MILESTONES.map(m => m.cat))];
-      body = cats.map(cat => `<div class="sect">${esc(cat)}</div><div class="miles">${MILESTONES.filter(m => m.cat === cat).map(m => {
+      body = `<div class="hint">Milestones you reach this voyage add Prestige to your <b>pending</b> pot. It pays out when you defeat the Kraken and start a New Voyage.</div>` + cats.map(cat => `<div class="sect">${esc(cat)}</div><div class="miles">${MILESTONES.filter(m => m.cat === cat).map(m => {
         const got = P.earned[m.id], hidden = !got && ((m.id.startsWith('isle_') || m.id.startsWith('trei_') || m.id.startsWith('set_isle')) && !(S.isles[(m.id.split('_').pop())] || {}).visits || m.id.startsWith('boss_') && BOSSES[m.id.slice(5)].isle && !(S.isles[BOSSES[m.id.slice(5)].isle] || {}).visits);
         return `<div class="mile ${got ? 'got' : ''}"><span>${got ? '✔' : '○'} ${hidden ? '???' : esc(m.n)}</span><b>+${got || Math.round(m.pp * voyageMul())}</b></div>`; }).join('')}</div>`).join('');
     } else {
-      body = `<div class="voyage"><p class="big-p">A <b>New Voyage</b> starts the game again from a poor beach — but you keep your Prestige, every perk you bought, and you earn milestones <b>again</b>, worth <b>+25%</b> more each voyage.</p>
-        <p>You also get a voyage bonus of <b>${25 * P.voyage} Prestige</b>.${perkLv('p_legacy') ? ` Legacy Wealth gives you ${coinHTML(legacyCoins(perkLv('p_legacy')))} to start.` : ''}</p>
+      body = `<div class="voyage"><p class="big-p">Defeat the <b>Kraken</b>, then <b>Prestige</b>: the game restarts from a poor beach, and everything you earned this voyage becomes Prestige to spend on permanent perks for your next run.</p>
+        <p>Cash in now: <b>${P.pending}</b> from milestones + <b>${25 * P.voyage}</b> voyage bonus = <b class="up">${P.pending + 25 * P.voyage} Prestige</b>. Milestones can be earned again each voyage, worth <b>+25%</b> more every time.${perkLv('p_legacy') ? ` Legacy Wealth gives you ${coinHTML(legacyCoins(perkLv('p_legacy')))} to start.` : ''}</p>
         <p class="muted">Current voyage: <b>${P.voyage}</b> · milestone bonus ×${voyageMul().toFixed(2)}</p>
-        ${S.kraken ? `<button class="btn red big" data-act="newvoyage">⛵ Begin Voyage ${P.voyage + 1}</button>` : '<div class="warn">🔒 Defeat the Kraken to unlock New Voyages.</div>'}</div>`;
+        ${S.kraken ? `<button class="btn red big" data-act="newvoyage">🏆 Prestige & begin Voyage ${P.voyage + 1}</button>` : '<div class="warn">🔒 Defeat the Kraken to Prestige.</div>'}</div>`;
     }
-    return `<div class="pp-head"><div class="pp-big">🏆 <b>${P.pp}</b><span>Prestige points</span></div><div class="muted small">Earned in total: ${P.total} · Voyage ${P.voyage}<br>Earn Prestige from milestones: regions, collections, museums, bosses and more.</div></div><div class="tabs">${tabs}</div>${body}`;
+    return `<div class="pp-head"><div class="pp-big">🏆 <b>${P.pp}</b><span>banked to spend</span></div><div class="pp-big pend">⏳ <b>${P.pending}</b><span>pending this voyage</span></div><div class="muted small">Voyage ${P.voyage} · cashed in so far: ${P.total}<br>Earn Prestige from milestones: regions, collections, museums, bosses and more.</div></div><div class="tabs">${tabs}</div>${body}`;
   }, { cls: 'wide' });
 }
 function newVoyage() {
   if (!S.kraken) return;
   const P = S.prestige, bonus = 25 * P.voyage, legacy = legacyCoins(perkLv('p_legacy')), slot = S.slot, play = S.play;
-  P.pp += bonus; P.total += bonus; P.voyage++; P.earned = {}; P.init = true;
+  const gain = (P.pending || 0) + bonus; P.pp += gain; P.total += gain; P.pending = 0; P.voyage++; P.earned = {}; P.init = true;
   const ns = newState(slot); ns.prestige = P; ns.play = play; ns.flags.u4intro = true; ns.sp = P.perks.p_sp || 0;
   S = ns; if (legacy) { S.money = legacy; }
   rebuildCustomParts(); save(true); closePanel();
-  transition(() => { go('village'); setTimeout(() => bigBanner(`Voyage ${P.voyage}`, `A new beginning. You keep your Prestige (+${bonus} voyage bonus) and all your perks.`, '#ffd23a'), 400); });
+  transition(() => { go('village'); setTimeout(() => { bigBanner(`Voyage ${P.voyage}`, `A new beginning! +${gain} Prestige banked. Spend it on perks with the 🏆 button.`, '#ffd23a'); setTimeout(() => openPrestige(), 2600); }, 400); });
 }
 
 // ---------------- isle cards on the map ----------------
@@ -6631,7 +6928,7 @@ function openIsleCard(loc) {
       <button class="btn green" data-act="travelisle" data-kind="special" data-id="${I.id}" ${o.open ? '' : 'disabled'}>🎣 ${here ? 'Back to fishing' : 'Sail to ' + esc(I.name)}</button>
       ${eqTier('rod') + 1 < I.tier ? `<div class="warnc small">Your rod is weak for tier ${I.tier} fish. Many will escape!</div>` : ''}`;
   }
-  el.innerHTML = `<div class="mc-head">${head}<button class="btn ghost iconbtn small" data-act="mapclose">✕</button></div>${body}`;
+  el.innerHTML = iconize(`<div class="mc-head">${head}<button class="btn ghost iconbtn small" data-act="mapclose">✕</button></div>${body}`);
   drawIcons(el);
   el.classList.remove('hidden'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
 }
@@ -6684,7 +6981,8 @@ Object.assign(ACT, {
     sfx('buy'); [660, 880, 1100].forEach((f, i) => tone(f, 0.18, 'triangle', 0.07, 0, i * 0.08));
     toast(`🏆 ${esc(P.n)} Lv ${L + 1}: ${esc(P.d(L + 1))}`, 'quest'); save(true); renderPanel(); updateHUD();
   },
-  newvoyage: () => { if (confirm('Begin a New Voyage? Your progress (gear, village, collections) starts over. You keep Prestige and perks.')) newVoyage(); },
+  newvoyage: () => { if (confirm('Prestige and begin a New Voyage? Your progress (gear, village, collections) starts over. Your pending Prestige is banked and your perks stay.')) newVoyage(); },
+  prestigenow: () => { closePanel(); transition(() => { go('village'); setTimeout(() => { openPrestige(); PANEL.tab = 'voyage'; renderPanel(); }, 500); }); },
   prestige: () => openPrestige(),
   travelisle: d => startTravel(null, 'fish', { kind: d.kind, id: d.id })
 });
@@ -6734,6 +7032,8 @@ function frame(now) {
 window.addEventListener('beforeunload', () => { if (S && sceneName !== 'menu') save(true); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && S && sceneName !== 'menu') save(true); });
 
+// swap the emoji in the static HUD/menu for drawn icons
+document.querySelectorAll('#ui button, #saveind, #hullbox .wlabel, #weight .wlabel').forEach(el => { if (el.id === 'boostBtn') return; const h = el.innerHTML, n = iconize(h); if (n !== h) { el.innerHTML = n; paintIcons(el); } });
 go('menu');
 requestAnimationFrame(frame);
 
