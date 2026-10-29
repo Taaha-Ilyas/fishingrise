@@ -406,6 +406,14 @@ canvas.ico{display:inline-block;width:1.35em;height:1.35em;vertical-align:-.32em
 .sktab canvas.ico{width:22px;height:22px}
 @media (max-width:640px){.skicon canvas.ico{width:38px;height:38px}}
 .pp-big.pend{background:linear-gradient(#2a3a5a,#141e30);border-color:#7ab8ff}.pp-big.pend b{color:#bfe0ff}
+/* hold-to-learn skills (Update 4+ hotfix) */
+.skcell{touch-action:none;-webkit-touch-callout:none;--p:0}
+.skcell::after{content:'';position:absolute;inset:-6px;border-radius:18px;pointer-events:none;background:conic-gradient(#ffcf4a calc(var(--p) * 1turn), transparent 0);-webkit-mask:radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));mask:radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));opacity:0;transition:opacity .1s}
+.skcell.holding::after{opacity:1}
+.skcell.holding{transform:scale(.94)}
+.holdbtn{position:relative;overflow:hidden;--p:0;touch-action:none}
+.holdbtn .holdfill{position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * 100%);background:rgba(255,255,255,.45)}
+.holdbtn .holdtxt{position:relative}
 
 </style>
 </head>
@@ -460,10 +468,17 @@ canvas.ico{display:inline-block;width:1.35em;height:1.35em;vertical-align:-.32em
 // ================================================================
 //  FISHING RISE — GAME DATA
 // ================================================================
-const GAME_VERSION = '1.3.1';
+const GAME_VERSION = '1.3.2';
 const UPDATE_NO = 4;
 
 const PATCH_NOTES = [
+  {
+    v: 'Hotfix \u2014 v1.3.2', date: '29 October 2026', title: 'Hold to Learn',
+    notes: [
+      'SKILLS: hover over a skill (or tap it on touch screens) to see exactly what it does \u2014 clicking no longer spends a point by accident.',
+      'Press and HOLD a skill (or the "Hold to learn" button) to spend a point. A golden ring fills up while you hold.'
+    ]
+  },
   {
     v: 'Update 4+ \u2014 v1.3.1', date: '29 October 2026', title: 'Hotfix: Looks & Legacies',
     notes: [
@@ -5798,7 +5813,7 @@ function drawPortraits(root) { (root && root.querySelectorAll ? root : document)
 function showTip(html, x, y) { const t = $('#tooltip'); t.innerHTML = iconize(html); paintIcons(t); t.classList.remove('hidden'); const r = t.getBoundingClientRect(); t.style.left = clamp(x + 16, 6, W - r.width - 6) + 'px'; t.style.top = clamp(y + 12, 6, H - r.height - 6) + 'px'; }
 function hideTip() { $('#tooltip').classList.add('hidden'); }
 document.addEventListener('mouseover', e => { const el = e.target.closest('[data-fid]'); if (!el || !S) return; const f = S.basket.find(x => x.id == el.dataset.fid) || (CATCH && CATCH.fish.id == el.dataset.fid ? CATCH.fish : null); if (f) showTip(fishTipHTML(f), e.clientX, e.clientY); });
-document.addEventListener('mousemove', e => { const el = e.target.closest('[data-fid]'); if (!el) { hideTip(); return; } const t = $('#tooltip'); if (!t.classList.contains('hidden')) showTip(t.innerHTML, e.clientX, e.clientY); });
+document.addEventListener('mousemove', e => { if (e.target.closest && e.target.closest('[data-tip-skill]')) return; const el = e.target.closest('[data-fid]'); if (!el) { hideTip(); return; } const t = $('#tooltip'); if (!t.classList.contains('hidden')) showTip(t.innerHTML, e.clientX, e.clientY); });
 
 // ---------------- general helpers ----------------
 function setSail() {
@@ -6762,29 +6777,66 @@ function openSkills() {
       const cells = [0, 1, 2].map(row => {
         const sk = SKILLS.find(s => s.cat === T.id && s.col === ci && s.row === row); if (!sk) return '<div class="skcell empty"></div>';
         const r = S.skills[sk.id] || 0, open = skillRowOpen(sk), cap = skillCap(sk), can = open && r < cap && S.sp > 0;
-        return `<div class="skcell ${open ? '' : 'locked'} ${r ? 'has' : ''} ${r >= sk.max ? 'max' : ''} ${can ? 'can' : ''} ${sel === sk ? 'sel' : ''}" data-act="sksel" data-id="${sk.id}" data-tip-skill="${sk.id}" style="--tc:${T.col}">
+        return `<div class="skcell ${open ? '' : 'locked'} ${r ? 'has' : ''} ${r >= sk.max ? 'max' : ''} ${can ? 'can' : ''} ${sel === sk ? 'sel' : ''}" data-id="${sk.id}" data-tip-skill="${sk.id}" style="--tc:${T.col}">
           <div class="skicon">${iconHTML(open ? sk.icon : 'lock', 'sk')}</div><div class="skrank">${r}/${sk.max}</div>${can ? '<div class="skplus">+</div>' : ''}</div>`;
       }).join('<div class="sklink"></div>');
       return `<div class="skcol"><div class="skcolname">${esc(cn)}</div>${cells}</div>`;
     }).join('');
     const rowsInfo = SKILL_ROW_PTS.map((p, i) => `<div class="skrowtag ${tabPoints(T.id) >= p ? 'on' : ''}">${i === 0 ? 'Tier I' : `Tier ${'I'.repeat(i + 1)} · ${p} pts`}</div>`).join('');
-    let detail = `<div class="skdetail muted">${isTouch ? 'Tap' : 'Hover over'} a skill to see what it does. ${isTouch ? 'Tap it again' : 'Click it'} to learn it.</div>`;
-    if (sel) {
-      const r = S.skills[sel.id] || 0, open = skillRowOpen(sel), cap = skillCap(sel), can = open && r < cap && S.sp > 0;
-      detail = `<div class="skdetail"><div class="skd-main">${skillTipHTML(sel)}</div>${r < sel.max ? `<button class="btn gold" data-act="buyskill" data-id="${sel.id}" ${can ? '' : 'disabled'}>${r ? 'Upgrade' : 'Learn'} (1 point)</button>` : '<span class="badge eq">Mastered</span>'}</div>`;
-    }
+    const detail = `<div class="skdetail" id="skDetail">${skillDetailHTML(sel)}</div>`;
     return `<div class="sp-head"><span>Skill points: <b class="spn">${S.sp}</b></span><span class="muted small">1 point per level · Max rank right now: <b>${capNow}</b>${nr ? ` (reach ${esc(nr.sea)} for more)` : ''}</span></div>
       <div class="tabs">${tabs}</div>
       <div class="sktree" style="--tc:${T.col}"><div class="skrows">${rowsInfo}</div><div class="skcols">${cols}</div></div>${detail}`;
   }, {
-    cls: 'wide skills', after: () => {
-      document.querySelectorAll('[data-tip-skill]').forEach(el => {
-        el.onmouseenter = e => { if (!isTouch) showTip(skillTipHTML(SKILL_BY_ID[el.dataset.tipSkill]), e.clientX, e.clientY); };
-        el.onmousemove = e => { if (!isTouch) showTip(skillTipHTML(SKILL_BY_ID[el.dataset.tipSkill]), e.clientX, e.clientY); };
-        el.onmouseleave = () => hideTip();
-      });
-    }
+    cls: 'wide skills', after: bindSkillHold
   });
+}
+
+// hover (or tap) a skill to read it; press and HOLD to spend a point
+const SK_HOLD = 650;
+function skillDetailHTML(sk) {
+  if (!sk) return `<div class="skd-main muted">${isTouch ? 'Tap' : 'Hover over'} a skill to see what it does, then <b>press and hold</b> it to learn it.</div>`;
+  const r = S.skills[sk.id] || 0, can = skillRowOpen(sk) && r < skillCap(sk) && S.sp > 0;
+  return `<div class="skd-main">${skillTipHTML(sk)}</div>${r < sk.max ? `<button class="btn gold holdbtn" data-hold-skill="${sk.id}" ${can ? '' : 'disabled'}><span class="holdfill"></span><span class="holdtxt">Hold to ${r ? 'upgrade' : 'learn'} (1 point)</span></button>` : '<span class="badge eq">Mastered</span>'}`;
+}
+function showSkillDetail(id) {
+  PANEL.sel = id; const el = $('#skDetail'); if (!el) return;
+  el.innerHTML = iconize(skillDetailHTML(SKILL_BY_ID[id])); paintIcons(el);
+  document.querySelectorAll('.skcell.sel').forEach(c => c.classList.remove('sel'));
+  const cell = document.querySelector(`.skcell[data-id="${id}"]`); if (cell) cell.classList.add('sel');
+  bindHold(el.querySelector('[data-hold-skill]'));
+}
+function bindHold(el) {
+  if (!el) return;
+  const id = el.dataset.holdSkill || el.dataset.id;
+  let t0 = 0, raf = 0, done = false;
+  const sk = () => SKILL_BY_ID[id], canBuy = () => { const k = sk(), r = S.skills[id] || 0; return skillRowOpen(k) && r < skillCap(k) && S.sp > 0; };
+  const stop = () => { cancelAnimationFrame(raf); raf = 0; el.style.setProperty('--p', 0); el.classList.remove('holding'); };
+  const tick = () => {
+    const p = Math.min(1, (performance.now() - t0) / SK_HOLD); el.style.setProperty('--p', p);
+    if (p >= 1) { done = true; stop(); hideTip(); ACT.buyskill({ id }); return; }
+    if (Math.floor(p * 8) !== Math.floor((p - 0.02) * 8)) tone(500 + p * 700, 0.04, 'triangle', 0.03);
+    raf = requestAnimationFrame(tick);
+  };
+  el.addEventListener('pointerdown', e => {
+    e.preventDefault(); done = false;
+    if (el.classList.contains('skcell')) showSkillDetail(id);
+    if (!canBuy()) { if (el.classList.contains('skcell') && skillRowOpen(sk()) && S.sp < 1) toast('No skill points left — you get one every level.'); return; }
+    t0 = performance.now(); el.classList.add('holding'); raf = requestAnimationFrame(tick);
+    try { el.setPointerCapture(e.pointerId); } catch (err) { }
+  });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => el.addEventListener(ev, () => { if (raf) stop(); }));
+  el.addEventListener('contextmenu', e => e.preventDefault());
+}
+function bindSkillHold() {
+  document.querySelectorAll('.skcell[data-tip-skill]').forEach(el => {
+    const tip = e => { if (e.pointerType === 'mouse') showTip(skillTipHTML(SKILL_BY_ID[el.dataset.tipSkill]) + '<div class="small muted" style="margin-top:4px">Press and hold to learn</div>', e.clientX, e.clientY); };
+    el.addEventListener('pointerenter', e => { tip(e); if (e.pointerType === 'mouse') showSkillDetail(el.dataset.id); });
+    el.addEventListener('pointermove', tip);
+    el.addEventListener('pointerleave', () => hideTip());
+    bindHold(el);
+  });
+  bindHold(document.querySelector('#skDetail [data-hold-skill]'));
 }
 
 // ---------------- Custom forging (Greta) ----------------
@@ -6935,11 +6987,7 @@ function openIsleCard(loc) {
 
 // ---------------- actions ----------------
 Object.assign(ACT, {
-  sksel: d => {
-    const sk = SKILL_BY_ID[d.id]; if (!sk) return; const r = S.skills[d.id] || 0, can = skillRowOpen(sk) && r < skillCap(sk) && S.sp > 0;
-    if ((PANEL.sel === d.id || !isTouch) && can) return ACT.buyskill(d);
-    PANEL.sel = d.id; sfx('click'); renderPanel();
-  },
+  sksel: d => showSkillDetail(d.id),
   buyskill: d => {
     const SK = SKILL_BY_ID[d.id], r = S.skills[d.id] || 0;
     if (!SK || S.sp < 1 || r >= skillCap(SK) || !skillRowOpen(SK)) return sfx('error');
