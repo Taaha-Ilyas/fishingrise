@@ -2235,7 +2235,7 @@ function drawFishHQ(c, sp, x, y, L, o = {}) {
   const S2 = Math.ceil(L * 1.7), cv = _hq.cv || (_hq.cv = document.createElement('canvas')), sv = _hq.sil || (_hq.sil = document.createElement('canvas'));
   if (cv.width < S2) { cv.width = cv.height = sv.width = sv.height = S2; }
   const g = cv.getContext('2d'), gs = sv.getContext('2d'), m = S2 / 2;
-  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, S2, S2); gs.setTransform(1, 0, 0, 1, 0, 0); gs.clearRect(0, 0, S2, S2);
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); gs.setTransform(1, 0, 0, 1, 0, 0); gs.clearRect(0, 0, sv.width, sv.height);
   const oo = Object.assign({}, o, { rot: o.rot, alpha: 1 });
   drawFish(g, sp, m, m, L, Object.assign({}, oo, { glow: false }));
   drawFish(gs, sp, m, m, L, Object.assign({}, oo, { sil: '#14202c', glow: false }));
@@ -2250,11 +2250,12 @@ function drawFishHQ(c, sp, x, y, L, o = {}) {
   g.restore();
   c.save(); if (o.alpha != null) c.globalAlpha *= o.alpha;
   const lw = Math.max(1.5, L * 0.012);
-  c.save(); c.shadowColor = 'rgba(0,10,30,.35)'; c.shadowBlur = L * 0.08; c.shadowOffsetY = L * 0.05; c.drawImage(sv, x - m, y - m); c.restore();
-  for (let i = 0; i < 8; i++) { const a = i / 8 * TAU; c.drawImage(sv, x - m + Math.cos(a) * lw, y - m + Math.sin(a) * lw); }
+  const blit = (src, dx, dy) => c.drawImage(src, 0, 0, S2, S2, dx, dy, S2, S2);
+  c.save(); c.shadowColor = 'rgba(0,10,30,.35)'; c.shadowBlur = L * 0.08; c.shadowOffsetY = L * 0.05; blit(sv, x - m, y - m); c.restore();
+  for (let i = 0; i < 8; i++) { const a = i / 8 * TAU; blit(sv, x - m + Math.cos(a) * lw, y - m + Math.sin(a) * lw); }
   const glow = sp.pat === 'glow' || o.glow || sp.goldGlow;
-  if (glow) { c.save(); c.shadowColor = sp.c3; c.shadowBlur = L * 0.25 * (0.7 + 0.3 * Math.sin((o.t || 0) * 3)); c.drawImage(cv, x - m, y - m); c.restore(); }
-  c.drawImage(cv, x - m, y - m);
+  if (glow) { c.save(); c.shadowColor = sp.c3; c.shadowBlur = L * 0.25 * (0.7 + 0.3 * Math.sin((o.t || 0) * 3)); blit(cv, x - m, y - m); c.restore(); }
+  blit(cv, x - m, y - m);
   c.restore();
 }
 function drawFish(c, sp, x, y, L, o = {}) {
@@ -4981,7 +4982,7 @@ Scenes.sea = {
         const fish = { id: S.nextId++, sp: fg.sp.id, w: +(fg.sp.wMin + (fg.sp.wMax - fg.sp.wMin) * Math.min(1, fg.s.t * rand(0.92, 1.08))).toFixed(2), r: fg.r, v, t: Date.now() };
         const perfect = fg.offT < 0.4; if (perfect) { fish.pf = 1; S.stats.perfect = (S.stats.perfect || 0) + 1; }
         this.streak = (this.streak || 0) + 1; fish.sk = this.streak; S.stats.bestStreak = Math.max(S.stats.bestStreak || 0, this.streak);
-        if (this.streak >= 3) floatText(this.fx, this.boat.x, this.boat.y - 80, `🔥 ${this.streak} catch streak!`, '#ffb04a', 18);
+        if (this.streak >= 3) floatText(this.fx, this.boat.x, this.boat.y + 70, `🔥 ${this.streak} catch streak!`, '#ffb04a', 18);
         this.rv = { fish, isNew: !S.dex[fish.sp], u: 0, sx: fg.s.x, sy: fg.s.y, chest: F.chestGot, perfect, hook: fg.hook };
         this.hitStop = 0.22; this.flashT = fish.r >= 4 || v >= 4 ? 0.5 : 0.25;
         this.takeShadow(fg.s);
@@ -5147,7 +5148,7 @@ Scenes.sea = {
     ctx.restore();
     ambientOverlay(this, A, t);
     if (this.flashT > 0) { this.flashT -= 1 / 60; ctx.fillStyle = `rgba(255,255,255,${Math.max(0, this.flashT) * 0.6})`; ctx.fillRect(0, 0, W, H); }
-    if ((this.streak || 0) >= 2 && this.state !== 'fishing') { const x = W / 2, y = H - (isTouch ? 150 : 104); ctx.font = 'bold 16px Fredoka, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const txt = `🔥 Streak ×${this.streak}  ·  +${Math.min(100, (this.streak - 1) * 10)}% XP · luckier fish`; const w = ctx.measureText(txt).width + 34; ctx.fillStyle = 'rgba(40,16,0,.55)'; rrect(ctx, x - w / 2, y - 14, w, 28, 14); ctx.fill(); ctx.fillStyle = '#ffcf6a'; textIcons(ctx, txt, x, y, 16, 'fill'); }
+    if ((this.streak || 0) >= 2 && this.state !== 'fishing') { const rb = document.getElementById('resbar'), top = rb && !rb.classList.contains('hidden') ? rb.getBoundingClientRect().bottom : 66; ctx.font = 'bold 15px Fredoka, sans-serif'; ctx.textBaseline = 'middle'; const txt = `🔥 Streak ×${this.streak} · +${Math.min(100, (this.streak - 1) * 10)}% XP`; const w = ctx.measureText(txt).width + 34, x = W - 12 - w, y = top + 22; ctx.fillStyle = 'rgba(40,16,0,.6)'; rrect(ctx, x, y - 14, w, 28, 14); ctx.fill(); ctx.strokeStyle = 'rgba(255,176,74,.6)'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.textAlign = 'center'; ctx.fillStyle = '#ffcf6a'; textIcons(ctx, txt, x + w / 2, y, 15, 'fill'); }
     if (this.state === 'sail' && !uiBlocking()) {
       const key = isTouch ? 'Tap' : 'E';
       if (this.nearCast) { const p = this.toScreen(this.castaway.x, this.castaway.y - 90); bubble(ctx, p.x, p.y, `${key}: Rescue ${MERCHANTS[this.castaway.id].name}!`); }
